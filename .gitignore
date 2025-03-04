@@ -1,0 +1,14 @@
+# Ignore binary files
+*.exe
+*.dll
+*.o
+*.obj
+*.bin
+*.so
+*.cpython-313.pyc
+*.sqlite3
+
+# Ignore cache directories
+.cache/
+cache/
+__pycache__/
