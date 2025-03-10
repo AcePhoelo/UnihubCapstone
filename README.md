@@ -28,3 +28,7 @@ cd my-app
 npm start
 	This will start the React development server, and your application should open in a browser at:
 http://localhost:3000
+
+Additionally you need to download these (copy-paste to Command Prompt):
+npm install react-bootstrap bootstrap
+npm install react react-dom
