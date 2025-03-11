@@ -13,7 +13,7 @@ Step-by-Step Guide
 	To check if Node.js and npm are installed correctly, run the following commands:
 node -v
 npm -v
-	You should see version numbers for both Node.js and npm.
+	You should see version numbers for both Node.js (v22.14.0) and npm (v10.9.2).
 4. Create a New React App
 	Run the following commands in the terminal:
 npx create-react-app my-app
