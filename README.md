@@ -32,3 +32,4 @@ http://localhost:3000
 Additionally you need to download these (copy-paste to Command Prompt):
 npm install react-bootstrap bootstrap
 npm install react react-dom
+npm install react-router-dom
