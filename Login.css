@@ -1,0 +1,121 @@
+.login-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #FAFAFA;
+}
+
+html, body {
+    height: auto;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 400px;
+    height: 360px;
+    background: #ffffff;
+    padding-bottom: 16px;
+    border: 1px solid #999999;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+    color: #000000;
+    font-size: 36px;
+    font-weight: 500;
+    width: 400px;
+    text-align: left;
+    margin-bottom: 14px;
+    font-family: 'Effra', sans-serif;
+}
+
+.login-text {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 450;
+    margin-bottom: 6px;
+    font-family: 'Effra', sans-serif;
+}
+
+.login-inputs {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.login-input-group {
+    display: flex;
+    flex-direction: column;
+    width: 352px; 
+    margin: auto;
+}
+
+.login-input {
+    height: 45px;
+    width: 352px; 
+    background: #ffffff;
+    border: 1px solid #999999;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 18px;
+    outline: none;
+    color: #000000;
+}
+
+.login-forgot-password {
+    margin-top: 16px;
+    width: 400px;
+    text-align: left;
+    color: #2074AC;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'ProximaNova', sans-serif;
+}
+
+.login-submit-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px auto 16px auto;
+}
+
+.login-submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    width: 352px;
+    color: #ffffff;
+    background: #2074AC;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 450;
+    cursor: pointer;
+    font-family: 'Effra', sans-serif;
+}
+
+.login-guest-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    width: 400px;
+}
+
+.login-guest {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    width: 352px;
+    color: #ffffff;
+    background: #2074AC;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 450;
+    cursor: pointer;
+    font-family: 'Effra', sans-serif;
+}
