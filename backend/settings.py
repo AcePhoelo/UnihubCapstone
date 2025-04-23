@@ -40,6 +40,7 @@ CORS_ALLOWED_ORIGINS = [
 ALLOWED_HOSTS = [
     "localhost",  # Frontend
     "127.0.0.1",  # Backend
+    "47.129.246.199",  # Public IP address
 ]
 
 
