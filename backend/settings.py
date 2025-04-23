@@ -81,9 +81,9 @@ INSTALLED_APPS = [
     "event.event_page",
 ]
 
-"""STATIC_URL = "/static/"
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles" """
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Middleware order: corsheaders.middleware.CorsMiddleware should be at the very top
 MIDDLEWARE = [
