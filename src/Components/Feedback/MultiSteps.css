@@ -1,0 +1,56 @@
+.steps-container {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    padding-left: 100px;
+}
+
+.custom-progress-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex-direction: column;
+    gap: 60px; 
+    width: 200px; 
+    margin-top: -475px;
+}
+
+    .custom-progress-container::before {
+        content: "";
+        position: absolute;
+        background-color: #dddddd;
+        width: 6px; 
+        height: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 0;
+    }
+
+.progress {
+    background-color: #1874AC;
+    position: absolute;
+    width: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: height 0.8s ease-in;
+    z-index: 1;
+}
+
+.circle {
+    background-color: #dddddd;
+    height: 30px; 
+    width: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px; 
+    font-weight: bold;
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
+    .circle.active {
+        background-color: #1874AC;
+    }
