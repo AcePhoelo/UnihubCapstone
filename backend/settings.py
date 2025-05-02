@@ -41,6 +41,7 @@ ALLOWED_HOSTS = [
     "localhost",  # Frontend
     "127.0.0.1",  # Backend
     "54.169.81.75", #AWS EC2
+    "18.141.193.54", #AWS EC2 (new)
 ]
 
 
