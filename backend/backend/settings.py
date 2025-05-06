@@ -39,11 +39,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://54.255.76.59:8000",
     "http://localhost:3000",  # Frontend origin
 ]
-ALLOWED_HOSTS = [
-    "54.255.76.59", #AWS EC2
-    "54.255.76.59:8000",
-    "localhost",  # Frontend
-]
+ALLOWED_HOSTS = ["54.255.76.59"]
 
 
 REST_FRAMEWORK = {
