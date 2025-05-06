@@ -31,18 +31,18 @@ DEBUG = True
 
 # Use the same host for the frontend for simplicity (we choose localhost here)
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
     "http://54.255.76.59:8000",
+    "http://localhost:3000",
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Frontend origin
     "http://54.255.76.59:8000",
+    "http://localhost:3000",  # Frontend origin
 ]
 ALLOWED_HOSTS = [
-    "localhost",  # Frontend
     "54.255.76.59", #AWS EC2
     "54.255.76.59:8000",
+    "localhost",  # Frontend
 ]
 
 
