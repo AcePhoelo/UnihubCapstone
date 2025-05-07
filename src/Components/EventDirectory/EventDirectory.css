@@ -1,0 +1,339 @@
+/* EventDirectory.css */
+/* PAGE */
+.event-directory-page {
+    background: #FAFAFA;
+    min-height: 100vh;
+}
+
+/* NAVBAR */
+.navbar {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FAFAFA;
+    height: 80px;
+    border-bottom: 3px solid #CB9900;
+    padding: 0 40px;
+    box-sizing: border-box;
+    flex-wrap: nowrap;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.navbar-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(20px, 8vw, 250px);
+    white-space: nowrap;
+    transition: gap 0.3s ease;
+}
+
+.clubs-navbar,
+.events-navbar,
+.activity-navbar {
+    cursor: pointer;
+    text-align: center;
+    color: #000000;
+    font-size: 18px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    white-space: nowrap;
+}
+
+.curtin-logo {
+    height: 36px;
+    width: auto;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: 24px;
+}
+
+.profile-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #E9ECEF;
+    border-radius: 50%;
+    display: flex;
+    color: black;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-family: 'Effra', sans-serif;
+    text-transform: uppercase;
+}
+
+.calendar-icon {
+    width: auto;
+    max-height: 40px;
+    margin-left: 48px;
+    margin-right: 24px;
+}
+
+@media (max-width: 950px) {
+    .navbar-text {
+        display: none;
+    }
+}
+
+/* FEATURED */
+.featured-event {
+    display: flex;
+    justify-content: center;
+    margin-top: 80px;
+}
+
+.featured-event-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.featured-event-box {
+    width: 800px;
+    border: 1px solid #999999;
+    background-color: #FAFAFA;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 10px;
+    height: 500px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.featured-event-image {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    flex-grow: 1;
+}
+
+.featured-event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 7px;
+    align-items: center;
+}
+
+.featured-event-name {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 450;
+    margin-left: 12px;
+    font-family: 'Effra', sans-serif;
+}
+
+.featured-event-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #E9ECEF;
+    display: flex;
+    color: #999999;
+    font-size: 12px;
+    margin-right: 12px;
+}
+
+.loading-text {
+    font-size: 18px;
+    color: gray;
+}
+
+.error-text {
+    color: red;
+    font-size: 18px;
+}
+
+/* EXPLORE EVENTS */
+.event-explore {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.event-explore-container {
+    width: 1254px;
+    display: flex;
+    flex-direction: column;
+}
+
+.event-explore-title {
+    color: #000000;
+    font-size: 36px;
+    font-weight: 500;
+    text-align: left; 
+    margin-bottom: 24px;
+    font-family: 'Effra', sans-serif;
+}
+
+.events-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+}
+
+.event-card {
+    display: flex;
+    align-items: stretch;
+    width: 1090px;
+    height: 225px;
+    border: 1px solid #999999;
+    background-color: #FAFAFA;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.event-card-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    width: 1254px;
+}
+
+.event-card-banner {
+    width: 400px;
+    height: 225px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.event-card-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.event-card-name {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 450;
+    margin: 0;
+    margin-bottom: 8px;
+    font-family: 'Effra', sans-serif;
+}
+
+.event-card-description {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 450;
+    margin: 0;
+    margin-bottom: 0; 
+    font-family: 'Proxima Nova', sans-serif;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+}
+
+.spacer {
+    flex-grow: 1; 
+}
+
+.event-card-meta {
+    color: #999999;
+    font-size: 16px;
+    margin: 0;
+    font-family: 'Proxima Nova', sans-serif;
+}
+
+.event-club-section {
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 80px;
+    cursor: pointer;
+}
+
+.event-club-icon {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #E9ECEF;
+}
+
+.event-club-icon-placeholder {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    background-color: #E9ECEF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999999;
+    font-size: 12px;
+}
+
+.event-club-name {
+    margin-top: 6px;
+    font-size: 16px;
+    text-align: center;
+    font-family: 'Proxima Nova', sans-serif;
+}
+
+/* FOOTER */
+.footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FAFAFA;
+    height: 80px;
+    border-top: 3px solid #EEC010;
+    padding-left: 40px;
+    box-sizing: border-box;
+    margin-top: 80px;
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+    margin-left: 40px;
+}
+
+.follow-link {
+    font-size: 20px;
+    font-weight: 450;
+    margin-right: 16px;
+    font-family: 'Effra', sans-serif;
+    color: #000000;
+    text-decoration: underline;
+    text-decoration-color: blue;
+}
+
+    .follow-link:visited {
+        text-decoration-color: purple;
+    }
+
+.social-media {
+    display: flex;
+    align-items: center;
+}
+
+    .social-media img {
+        width: 36px;
+        height: 36px;
+        margin-right: 12px;
+        cursor: pointer;
+    }
