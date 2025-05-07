@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member List</title>
+</head>
+<body>
+    <h1>Member List</h1>
+    <ul>
+        {% for member in members %}
+            <li>
+                {{ member.name }} - 
+                {% if member.custom_position %}
+                    {{ member.custom_position }} <!-- Display custom position if it exists -->
+                {% else %}
+                    {{ member.position }} <!-- Fallback to predefined position -->
+                {% endif %}
+                <a href="{% url 'update_position' member.id %}">Update Position</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
