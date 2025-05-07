@@ -1,0 +1,778 @@
+/* Event.css */
+/* PAGE */
+.event-page {
+    background: #FAFAFA;
+    min-height: 100vh;
+}
+
+/* NAVBAR */
+.navbar {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FAFAFA;
+    height: 80px;
+    border-bottom: 3px solid #CB9900;
+    padding: 0 40px;
+    box-sizing: border-box;
+    flex-wrap: nowrap;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.navbar-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(20px, 8vw, 250px);
+    white-space: nowrap;
+    transition: gap 0.3s ease;
+}
+
+.clubs-navbar,
+.events-navbar,
+.activity-navbar {
+    cursor: pointer;
+    text-align: center;
+    color: #000000;
+    font-size: 18px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+}
+
+.curtin-logo {
+    height: 36px;
+    width: auto;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: 24px;
+}
+
+.profile-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #E9ECEF;
+    border-radius: 50%;
+    display: flex;
+    color: black;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-family: 'Effra', sans-serif;
+    text-transform: uppercase;
+}
+
+.calendar-icon {
+    width: auto;
+    max-height: 40px;
+    margin-left: 48px;
+    margin-right: 24px;
+    cursor: pointer;
+}
+
+@media (max-width: 950px) {
+    .navbar-text {
+        display: none;
+    }
+}
+
+/* EVENT BANNER */
+.event-banner-wrapper {
+    position: relative;
+    width: 100%;
+    height: 576px;
+}
+
+.event-banner {
+    width: 100%;
+    height: 576px;
+    position: relative;
+    overflow: hidden;
+}
+
+.event-banner-img {
+    height: 576px;
+    width: 1024px;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1024px;
+    height: 100%;
+    transform: translateX(-50%);
+    z-index: 2;
+    mix-blend-mode: multiply;
+}
+
+.event-banner-content {
+    position: relative;
+    width: 100%;
+    max-width: 1024px;
+    height: 576px;
+    margin: 0 auto;
+    z-index: 3;
+}
+
+.event-banner-left {
+    position: absolute;
+    bottom: 50px;
+    left: -200px;
+}
+
+.event-banner-right {
+    position: absolute;
+    bottom: 50px;
+    right: -200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 80px;
+}
+
+.event-banner-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.event-club-logo {
+    height: 250px;
+    margin-bottom: 12px;
+    border-radius: 50%;
+}
+
+.event-page-name {
+    color: white;
+    font-size: 36px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    margin-bottom: 16px;
+}
+
+.register-button {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    width: 252px;
+    color: #ffffff;
+    background: #2074AC;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    cursor: pointer;
+    border: none;
+}
+
+.collaboration-icon,
+.participants-icon {
+    object-fit: contain;
+    background: none;
+    box-shadow: none;
+}
+
+/* EDIT EVENT */
+.edit-event-button {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    width: 252px;
+    color: #ffffff;
+    background: #2074ac;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    cursor: pointer;
+    border: none;
+}
+
+.event-edit-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.edit-event-title-input {
+    width: 250px;
+    padding: 8px;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.edit-banner-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.event-edit-buttons {
+    display: flex;
+    gap: 20px;
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.save-event-edit,
+.cancel-event-edit {
+    height: 45px;
+    width: 126px;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    cursor: pointer;
+    border: none;
+}
+
+.save-event-edit {
+    background: #2074ac;
+}
+
+.cancel-event-edit {
+    background: #cf2424;
+}
+
+.edit-event-title-input {
+    width: 1024px;
+    font-size: 36px;
+    font-weight: 450;
+    text-align: center;
+    background: transparent;
+    color: white;
+    border: none;
+    outline: none;
+    font-family: 'Effra', sans-serif;
+}
+
+.change-banner-button {
+    height: 45px;
+    width: 252px;
+    color: #ffffff;
+    background: #666666;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    cursor: pointer;
+    border: none;
+}
+
+/* LEFT COLUMN */
+.event-collaboration-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.event-collaboration-title {
+    color: white;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    text-align: center;
+}
+
+/* DELETE EVENT */
+.delete-event-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.delete-event-title {
+    color: white;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    text-align: center;
+}
+
+/* RIGHT COLUMN */
+.event-participants-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.event-participants-title {
+    color: white;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    text-align: center;
+}
+
+/* DETAILS SECTION */
+.event-details {
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+/* EDIT DESCRIPTION */
+.edit-event-description,
+.edit-event-details {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+    top: -10px;
+}
+
+    .edit-event-description img,
+    .edit-event-details img {
+        height: 18px;
+        width: 18px;
+        object-fit: contain;
+    }
+
+.edit-description-textarea {
+    width: 100%;
+    min-height: 250px;
+    padding: 8px 12px;
+    font-size: 16px;
+    font-family: 'Effra', sans-serif;
+    border: 1px solid #999999;
+    border-radius: 6px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    resize: none;
+}
+
+.description-char-counter {
+    position: absolute;
+    bottom: 16px;
+    right: 10px;
+    font-size: 14px;
+    color: #666;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+    .description-char-counter.red {
+        color: red;
+        font-weight: bold;
+    }
+
+.edit-description-controls {
+    display: flex;
+    gap: 12px;
+}
+
+.save-description-button,
+.cancel-description-button {
+    padding: 6px 12px;
+    font-size: 16px;
+    font-family: 'Effra', sans-serif;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-description-button {
+    background: #2074AC;
+    color: #ffffff;
+}
+
+.cancel-description-button {
+    background: #CF2424;
+    color: #ffffff;
+}
+
+/* EDIT DETAILS */
+.edit-event-details,
+.save-event-details,
+.cancel-event-details {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+    .edit-event-details img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+    }
+
+.event-page-date input,
+.event-page-time input,
+.event-page-location input {
+    margin-left: 8px;
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: 'Effra', sans-serif;
+}
+
+.event-page-date,
+.event-page-time,
+.event-page-location {
+    margin-bottom: 8px;
+}
+
+.save-event-details {
+    background-color: #2074AC;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: 'Effra', sans-serif;
+}
+
+.cancel-event-details {
+    background-color: #CF2424;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: 'Effra', sans-serif;
+}
+
+/* DESCRIPTION */
+.event-description-container {
+    width: 1024px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.event-description-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    width: 1024px;
+}
+
+.event-description-title {
+    color: #000000;
+    font-size: 36px;
+    font-weight: 500;
+    text-align: left;
+    margin-bottom: 12px;
+    font-family: 'Effra', sans-serif;
+}
+
+.event-description {
+    width: 100%;
+    white-space: pre-wrap;
+    font-size: 16px;
+    margin: 0;
+    font-family: 'Proxima Nova', sans-serif;
+}
+
+/* META */
+.details-event-container {
+    width: 1024px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.details-event-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    width: 1024px;
+}
+
+.meta-event-title {
+    color: #000000;
+    font-size: 36px;
+    font-weight: 500;
+    text-align: left;
+    margin-bottom: 12px;
+    font-family: 'Effra', sans-serif;
+}
+
+.event-page-date,
+.event-page-time,
+.event-page-location {
+    width: 100%;
+    white-space: pre-wrap;
+    font-size: 16px;
+    margin: 0;
+    font-family: 'Proxima Nova', sans-serif;
+}
+
+/* FEEDBACK BUTTON */
+.feedback-button-wrapper {
+    width: 1024px;
+    margin: 20px auto 0;
+    text-align: right;
+}
+
+.feedback-button {
+    width: 195px;
+    height: 45px;
+    background-color: #2074AC;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    cursor: pointer;
+}
+
+/* PARTICIPANTS PANEL */
+.participants-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    max-width: 1800px;
+    width: 1800px;
+    background-color: #FAFAFA;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.participants-panel-content {
+    padding: 24px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.participants-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    background-color: #FAFAFA;
+    height: 80px;
+    z-index: 20;
+    box-sizing: border-box;
+    transform: translateY(-20px);
+}
+
+.participants-panel-header-border {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 100vw;
+    height: 3px;
+    background-color: #999999;
+    z-index: 999;
+    pointer-events: none;
+}
+
+.participants-header-inner {
+    max-width: 1600px;
+    width: 100%;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+}
+
+.participants-header-left {
+    flex-shrink: 0;
+    margin-top: 5px;
+}
+
+.participants-header-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-grow: 1;
+}
+
+.participants-title {
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    color: black;
+}
+
+.total-participants {
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    color: black;
+}
+
+.participants-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+}
+
+.search-bar-wrapper {
+    width: 575px;
+    height: 45px;
+    display: flex;
+    border: 1px solid #999999;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.participants-search-input {
+    width: 460px;
+    height: 100%;
+    padding: 0 12px;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    font-family: 'Proxima Nova', sans-serif;
+    box-sizing: border-box;
+}
+
+.participants-search-button {
+    width: 115px;
+    height: 100%;
+    background-color: #EEC010;
+    color: #000;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.manage-roles {
+    background: none;
+    border: none;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    color: black;
+    cursor: pointer;
+}
+
+/* PARTICIPANT CARD & SECTIONS */
+.role-section {
+    width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+.role-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+    text-align: left;
+    font-family: 'Effra', sans-serif;
+}
+
+.person-card {
+    width: 900px;
+    height: 100px;
+    border-top: 1px solid #999999;
+    border-left: 1px solid #999999;
+    border-right: 1px solid #999999;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    box-sizing: border-box;
+    gap: 24px;
+    background: #FAFAFA;
+}
+
+.person-card:last-child {
+    border-bottom: 1px solid #999999;
+}
+
+.person-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #E9ECEF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+    color: black;
+}
+
+.person-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.person-name {
+    font-size: 18px;
+    font-weight: 450;
+    font-family: 'Effra', sans-serif;
+}
+
+.person-id {
+    font-size: 14px;
+    font-family: 'Proxima Nova', sans-serif;
+    font-weight: 450;
+    color: #777;
+}
+
+.remove-participant-icon {
+    margin-left: auto;
+    height: 26px;
+    width: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
