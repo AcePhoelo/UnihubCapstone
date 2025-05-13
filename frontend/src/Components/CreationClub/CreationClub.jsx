@@ -14,6 +14,7 @@ const CreationClub = () => {
     const [description, setDescription] = useState('');
     const [members, setMembers] = useState(Array(10).fill(''));
     const [formValid, setFormValid] = useState(false);
+    const [currentUser, setCurrentUser] = useState({}); // Add this line
     const [errorMessage, setErrorMessage] = useState('');
     const maxDescriptionLength = 1500;
     const { success: success2, error: error2 } = useNotification();
@@ -44,7 +45,7 @@ const CreationClub = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch('http://54.169.81.75:8000/profile/user/', {
+                const response = await fetch('http://54.169.81.75:8000/profile/profile/', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
                     }

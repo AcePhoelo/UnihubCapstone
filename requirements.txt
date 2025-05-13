@@ -13,3 +13,4 @@ requests
 colorthief
 pillow
 tqdm
+boto3 django-storages
