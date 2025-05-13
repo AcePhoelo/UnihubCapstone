@@ -53,8 +53,12 @@ const CreationClub = () => {
                 
                 if (response.ok) {
                     const userData = await response.json();
+                    console.log('Fetched user data:', userData);
+                    console.log('Student ID from API:', userData.studentid);
+                    console.log('User ID from API:', userData.id);
                     setCurrentUser(userData);
                 } else {
+                    console.error('Failed to fetch profile:', response.status, response.statusText);
                     error2('Error fetching user profile. Please log in again.');
                 }
             } catch (error) {
@@ -93,19 +97,34 @@ const CreationClub = () => {
         const formData = new FormData();
         formData.append('name', clubName);
         formData.append('description', description);
-        formData.append('president_id', currentUser.studentid);
+        
+        // Enhanced validation
+        if (!currentUser || !currentUser.studentid) {
+            error2('User profile information is missing. Please log in again.');
+            setIsLoading(false);
+            return;
+        }
+        
+        // Use studentid instead of id - this should match the USER_PROFILE_STUDENT table's primary key
+        console.log('Using president_id:', currentUser.id);
+        formData.append('president_id', currentUser.id);
+        
         if (iconPreview) {
             formData.append('logo', document.getElementById('icon-upload').files[0]);
         }
         if (bannerPreview) {
             formData.append('banner', document.getElementById('banner-upload').files[0]);
         }
+        
+        // Log form data for debugging
+        console.log('Form data president_id:', formData.get('president_id'));
+        
         members.forEach((member, index) => {
             formData.append(`members[${index}]`, member);
         });
 
         try {
-            // Fix the URL to match the endpoint shown in the logs
+            console.log('Submitting club creation with president_id:', formData.get('president_id'));
             const response = await fetch('http://54.169.81.75:8000/clubs/clubs/create/', {
                 method: 'POST',
                 headers: {
@@ -126,8 +145,16 @@ const CreationClub = () => {
             }
         } catch (error) {
             console.error('Error creating club:', error);
-            error2('An error occurred while creating the club. Please try again.');
-            // Reset the form when an error occurs
+            // Try to get more details about the error
+            try {
+                const errorResponse = await error.response?.json();
+                console.error('Error details:', errorResponse);
+                error2('An error occurred while creating the club: ' + 
+                    (errorResponse?.detail || errorResponse?.error || error.message || 'Unknown error'));
+            } catch (e) {
+                error2('An error occurred while creating the club. Please try again.');
+            }
+            
             resetForm();
         } finally {
             setIsLoading(false);
