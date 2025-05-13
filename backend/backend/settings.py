@@ -32,13 +32,15 @@ DEBUG = True
 # Use the same host for the frontend for simplicity (we choose localhost here)
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
+    "http://s3-deployment-ec2.s3-website-ap-southeast-1.amazonaws.com",  # Frontend S3 bucket URL
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Frontend origin
+    "http://s3-deployment-ec2.s3-website-ap-southeast-1.amazonaws.com",  # Frontend S3 bucket URL
 ]
 ALLOWED_HOSTS = [
-    "localhost",  # Frontend
+    "localhost",  # Frontend local
     "127.0.0.1",  # Backend (change to 54.169.81.75:8000)
     "54.169.81.75",
 ]
@@ -84,6 +86,7 @@ INSTALLED_APPS = [
     "event.add_event",
     "event.event_registration",
     "event.event_page",
+    "storages",
 ]
 
 """STATIC_URL = "/static/"
@@ -159,9 +162,26 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Media files settings
-MEDIA_URL = '/assets/'  # URL path for accessing media files
-MEDIA_ROOT = BASE_DIR.parent / 'frontend' / 'src' / 'assets'  # Absolute path to the assets folder
+# # Media files settings
+# MEDIA_URL = '/assets/'  # URL path for accessing media files
+# MEDIA_ROOT = BASE_DIR.parent / 'frontend' / 'src' / 'assets'  # Absolute path to the assets folder
+
+# S3 Configuration (keep storages in INSTALLED_APPS)
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', 'unihub-media')
+AWS_S3_REGION_NAME = 'ap-southeast-1'  # Singapore region
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+# Serve media files from S3
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+
+# Define distinct folder paths for different upload types
+AWS_CLUB_LOGO_LOCATION = 'club_logos'
+AWS_CLUB_BANNER_LOCATION = 'club_banners'
+AWS_EVENT_BANNER_LOCATION = 'event_banners'
+AWS_PROFILE_PICTURE_LOCATION = 'profile_pictures'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

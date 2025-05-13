@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.apps import apps
+from backend.storage import ProfilePictureStorage
+
 
 
 class Student(models.Model):
@@ -51,7 +53,8 @@ class Student(models.Model):
         help_text="The unique student ID."
     )
     profile_picture = models.ImageField(
-        upload_to='profile_pictures/',
+        storage=ProfilePictureStorage(),
+        upload_to='',
         null=True,
         blank=True,
         verbose_name="Profile Picture",

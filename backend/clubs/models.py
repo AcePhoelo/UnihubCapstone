@@ -1,5 +1,7 @@
 from django.db import models
 import json
+from backend.storage import ClubLogoStorage, ClubBannerStorage
+
 
 class Club(models.Model):
     name = models.CharField(max_length=100)
@@ -14,14 +16,16 @@ class Club(models.Model):
         help_text="The president of the club."
     )
     logo = models.ImageField(
-        upload_to='club_logos/',
+        storage=ClubLogoStorage(),
+        upload_to='',
         null=True,
         blank=True,
         verbose_name="Club Logo",
         help_text="The logo of the club."
     )
     banner = models.ImageField(
-        upload_to='club_banners/',
+        storage=ClubBannerStorage(),
+        upload_to='',
         null=True,
         blank=True,
         verbose_name="Club Banner",

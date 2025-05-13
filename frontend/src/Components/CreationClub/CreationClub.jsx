@@ -42,6 +42,30 @@ const CreationClub = () => {
     };
 
     useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const response = await fetch('http://54.169.81.75:8000/profile/user/', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                    }
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    setCurrentUser(userData);
+                } else {
+                    error2('Error fetching user profile. Please log in again.');
+                }
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
+                error2('Could not verify your account. Please log in again.');
+            }
+        };
+        
+        fetchUserProfile();
+    }, []);
+
+    useEffect(() => {
         const clubInfoValid = clubName.trim() !== '' && description.trim() !== '';
         const membersValid = members.every((id) => id.trim() !== '' && /^\d{8}$/.test(id));
         setFormValid(clubInfoValid && membersValid);
@@ -68,6 +92,7 @@ const CreationClub = () => {
         const formData = new FormData();
         formData.append('name', clubName);
         formData.append('description', description);
+        formData.append('president_id', currentUser.studentid);
         if (iconPreview) {
             formData.append('logo', document.getElementById('icon-upload').files[0]);
         }
