@@ -84,23 +84,23 @@ class Student(models.Model):
         Club = apps.get_model('clubs', 'Club')  # Use django.apps.apps.get_model
         return Club.objects.filter(president=self)
 
-def save(self, *args, **kwargs):
-    # Update full_name from component parts
-    if not self.full_name or self._has_name_components_changed():
-        parts = []
-        if self.first_name:
-            parts.append(self.first_name)
-        if self.middle_name:
-            parts.append(self.middle_name)
-        if self.last_name:
-            parts.append(self.last_name)
-        
-        if parts:  # Only join if there are parts to join
-            self.full_name = " ".join(parts)
-        else:
-            self.full_name = ""  # Default to empty string if no name parts
+    def save(self, *args, **kwargs):
+        # Update full_name from component parts
+        if not self.full_name or self._has_name_components_changed():
+            parts = []
+            if self.first_name:
+                parts.append(self.first_name)
+            if self.middle_name:
+                parts.append(self.middle_name)
+            if self.last_name:
+                parts.append(self.last_name)
             
-    super().save(*args, **kwargs)
+            if parts:  # Only join if there are parts to join
+                self.full_name = " ".join(parts)
+            else:
+                self.full_name = ""  # Default to empty string if no name parts
+                
+        super().save(*args, **kwargs)
 
     def _has_name_components_changed(self):
         """Check if name components have changed compared to full_name"""
