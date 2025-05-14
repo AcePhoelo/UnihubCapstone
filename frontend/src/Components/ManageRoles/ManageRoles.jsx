@@ -314,7 +314,7 @@ const ManageRoles = () => {
                 const numericId = roleId.replace('custom_', '');
                 url = `http://54.169.81.75:8000/clubs/clubs/${club_id}/roles/${numericId}/delete/`;
             } else {
-                url = `http://54.169.81.75:8000/clubs/clubs/${club_id}/roles/${roleId}/delete/`;
+                url = `http://54.169.81.75:8000/clubs/clubs/${club_id}/roles/delete/`;
             }
     
             console.log(`Sending DELETE request to: ${url}`);

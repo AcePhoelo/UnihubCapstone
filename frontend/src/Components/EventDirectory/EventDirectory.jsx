@@ -48,84 +48,104 @@ const EventDirectory = () => {
                                 profilePicUrl ? `http://54.169.81.75:8000${profilePicUrl}` : '');
     }, []);
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const token = localStorage.getItem('access_token');
-                const headers = { 'Content-Type': 'application/json' };
-                if (!isGuest && token) headers.Authorization = `Bearer ${token}`;
+    // In the fetchEvents function, update to use backend colors directly
+    const fetchEvents = async () => {
+        try {
+            const token = localStorage.getItem('access_token');
+            const headers = { 'Content-Type': 'application/json' };
+            if (!isGuest && token) headers.Authorization = `Bearer ${token}`;
 
-                const resp = await fetch('http://54.169.81.75:8000/api/event/add_event/', {
-                    headers,
-                });
+            const resp = await fetch('http://54.169.81.75:8000/api/event/add_event/', {
+                headers,
+            });
 
-                if (!resp.ok) {
-                    const text = await resp.text();
-                    throw new Error(`HTTP ${resp.status}: ${text}`);
-                }
-                const data = await resp.json();
-                const formattedEvents = data.map(event => ({
-                    id: event.id,
-                    name: event.name,
-                    description: event.description,
-                    imageUrl: event.banner,
-                    date: event.date,
-                    time: event.time,
-                    place: event.location,
-                    unit: event.unit || '',
-                    club: event.club_details ? {
-                        id: event.club_details.id,
-                        name: event.club_details.name,
-                        logoUrl: event.club_details.logo,
-                    } : null,
-                }));
-                setEvents(formattedEvents);
-            } catch (err) {
-                console.error('Error fetching events:', err);
-                setEventsError('Failed to load events.');
-            } finally {
-                setLoading(false);
+            if (!resp.ok) {
+                const text = await resp.text();
+                throw new Error(`HTTP ${resp.status}: ${text}`);
             }
-        };
+            const data = await resp.json();
+            const formattedEvents = data.map(event => ({
+                id: event.id,
+                name: event.name,
+                description: event.description,
+                imageUrl: event.banner?.startsWith('http') ? event.banner : 
+                        event.banner ? `http://54.169.81.75:8000${event.banner}` : null,
+                date: event.date,
+                time: event.time,
+                place: event.location,
+                unit: event.unit || '',
+                club: event.club_details ? {
+                    id: event.club_details.id,
+                    name: event.club_details.name,
+                    logoUrl: event.club_details.logo,
+                } : null,
+                // Use the colors directly from API
+                dominant_color: event.dominant_color,
+                secondary_color: event.secondary_color,
+                tertiary_color: event.tertiary_color,
+                shadow_color: event.shadow_color,
+                // Create gradients from API colors
+                hoverBackground: event.dominant_color && event.secondary_color && event.tertiary_color ? 
+                    createGradientFromPalette([
+                        event.dominant_color, 
+                        event.secondary_color, 
+                        event.tertiary_color
+                    ], 4) : 
+                    'linear-gradient(to right, #ccc, #eee)',
+                hoverColor: event.dominant_color ? 
+                    `rgb(${event.dominant_color.join(',')})` : 
+                    'rgba(200,200,200,0.5)',
+            }));
+            setEvents(formattedEvents);
+            setColorsReady(true); // Colors are already set
+        } catch (err) {
+            console.error('Error fetching events:', err);
+            setEventsError('Failed to load events.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchEvents();
     }, []);
 
 
-    useEffect(() => {
-        if (!colorsReady && events.length > 0) {
-            (async () => {
-                const updated = await Promise.all(
-                    events.map(async evt => {
-                        try {
-                            const imgRes = await fetch(evt.imageUrl);
-                            const blob = await imgRes.blob();
-                            const url = URL.createObjectURL(blob);
-                            const img = new Image();
-                            img.src = url;
-                            await new Promise(r => (img.onload = r));
-                            URL.revokeObjectURL(url);
+    // useEffect(() => {
+    //     if (!colorsReady && events.length > 0) {
+    //         (async () => {
+    //             const updated = await Promise.all(
+    //                 events.map(async evt => {
+    //                     try {
+    //                         const imgRes = await fetch(evt.imageUrl);
+    //                         const blob = await imgRes.blob();
+    //                         const url = URL.createObjectURL(blob);
+    //                         const img = new Image();
+    //                         img.src = url;
+    //                         await new Promise(r => (img.onload = r));
+    //                         URL.revokeObjectURL(url);
 
-                            const palette = new ColorThief().getPalette(img, 3);
-                            const [r, g, b] = palette[0];
-                            return {
-                                ...evt,
-                                hoverBackground: createGradientFromPalette(palette, 4),
-                                hoverColor: `rgb(${r}, ${g}, ${b})`,
-                            };
-                        } catch {
-                            return {
-                                ...evt,
-                                hoverBackground: 'linear-gradient(to right, #ccc, #eee)',
-                                hoverColor: 'rgba(200,200,200,0.5)',
-                            };
-                        }
-                    })
-                );
-                setEvents(updated);
-                setColorsReady(true);
-            })();
-        }
-    }, [events, colorsReady]);
+    //                         const palette = new ColorThief().getPalette(img, 3);
+    //                         const [r, g, b] = palette[0];
+    //                         return {
+    //                             ...evt,
+    //                             hoverBackground: createGradientFromPalette(palette, 4),
+    //                             hoverColor: `rgb(${r}, ${g}, ${b})`,
+    //                         };
+    //                     } catch {
+    //                         return {
+    //                             ...evt,
+    //                             hoverBackground: 'linear-gradient(to right, #ccc, #eee)',
+    //                             hoverColor: 'rgba(200,200,200,0.5)',
+    //                         };
+    //                     }
+    //                 })
+    //             );
+    //             setEvents(updated);
+    //             setColorsReady(true);
+    //         })();
+    //     }
+    // }, [events, colorsReady]);
 
     const getInitials = name => {
         const decodedName = decodeHTMLEntities(name || '');

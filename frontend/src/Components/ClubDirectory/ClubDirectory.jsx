@@ -284,9 +284,7 @@ const ClubDirectory = () => {
                         >
                             {pinnedClubs[featuredIndex].banner && (
                                 <img
-                                    src={pinnedClubs[featuredIndex].banner.startsWith('http') 
-                                        ? pinnedClubs[featuredIndex].banner 
-                                        : `http://54.169.81.75:8000${pinnedClubs[featuredIndex].banner}`}
+                                    src={pinnedClubs[featuredIndex].banner}
                                     alt={pinnedClubs[featuredIndex].name}
                                     className="featured-club-image"
                                 />
@@ -322,11 +320,11 @@ const ClubDirectory = () => {
                             >
                                 <div className="club-card">
                                     {club.banner ? (
-                                            <img
-                                                src={club.banner.startsWith('http') ? club.banner : `http://54.169.81.75:8000${club.banner}`}
-                                                alt={club.name}
-                                                className="club-card-banner"
-                                            />
+                                        <img
+                                            src={club.banner}
+                                            alt={club.name}
+                                            className="club-card-banner"
+                                        />
                                     ) : (
                                         <div className="club-card-banner">No Banner Available</div>
                                     )}

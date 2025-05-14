@@ -55,7 +55,7 @@ class EventSerializer(serializers.ModelSerializer):
     
         
     def get_dominant_color(self, obj):
-        if not obj.banner:
+        if not obj.event.banner:  # Note: Using event.banner instead of banner directly
             return None
             
         # Try to get from cache first (for fastest access)
@@ -67,27 +67,28 @@ class EventSerializer(serializers.ModelSerializer):
             
         # If not in cache, try to get from database
         try:
-            if os.path.exists(obj.banner.path):
-                palette, created = ColorPalette.objects.get_or_create(image_path=obj.banner.path)
-                if palette.dominant_color:
-                    dominant_color = json.loads(palette.dominant_color)
-                    # Store in cache for faster subsequent access
-                    cache.set(cache_key, dominant_color, timeout=3600)
-                    return dominant_color
+            # Use the string representation of the banner as the key
+            banner_key = str(obj.event.banner)
+            palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
+            if palette.dominant_color:
+                dominant_color = json.loads(palette.dominant_color)
+                # Store in cache for faster subsequent access
+                cache.set(cache_key, dominant_color, timeout=3600)
+                return dominant_color
                     
-                # If we don't have it in the database yet, calculate it
-                color_palette = calculate_colors(obj.banner.path)
-                if color_palette and color_palette.dominant_color:
-                    dominant_color = json.loads(color_palette.dominant_color)
-                    cache.set(cache_key, dominant_color, timeout=3600)
-                    return dominant_color
+            # If we don't have it in the database yet, calculate it
+            color_palette = calculate_colors(obj.event.banner)
+            if color_palette and color_palette.dominant_color:
+                dominant_color = json.loads(color_palette.dominant_color)
+                cache.set(cache_key, dominant_color, timeout=3600)
+                return dominant_color
         except Exception as e:
             print(f"Error accessing color palette: {e}")
         
         return None
 
     def get_secondary_color(self, obj):
-        if not obj.banner:
+        if not obj.event.banner:
             return None
             
         cache_key = f"event_{obj.id}_secondary_color"
@@ -97,26 +98,27 @@ class EventSerializer(serializers.ModelSerializer):
             return secondary
         
         try:
-            if os.path.exists(obj.banner.path):
-                palette, created = ColorPalette.objects.get_or_create(image_path=obj.banner.path)
-                if palette.secondary_color:
-                    secondary = json.loads(palette.secondary_color)
-                    cache.set(cache_key, secondary, timeout=3600)
-                    return secondary
+            # Use string representation instead of path
+            banner_key = str(obj.event.banner)
+            palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
+            if palette.secondary_color:
+                secondary = json.loads(palette.secondary_color)
+                cache.set(cache_key, secondary, timeout=3600)
+                return secondary
                     
-                # If not in database, calculate all colors at once
-                color_palette = calculate_colors(obj.banner.path)
-                if color_palette and color_palette.secondary_color:
-                    secondary = json.loads(color_palette.secondary_color)
-                    cache.set(cache_key, secondary, timeout=3600)
-                    return secondary
+            # If not in database, calculate all colors at once
+            color_palette = calculate_colors(obj.event.banner)
+            if color_palette and color_palette.secondary_color:
+                secondary = json.loads(color_palette.secondary_color)
+                cache.set(cache_key, secondary, timeout=3600)
+                return secondary
         except Exception as e:
             print(f"Error accessing color palette: {e}")
         
         return None
 
     def get_tertiary_color(self, obj):
-        if not obj.banner:
+        if not obj.event.banner:
             return None
             
         cache_key = f"event_{obj.id}_tertiary_color"
@@ -126,26 +128,27 @@ class EventSerializer(serializers.ModelSerializer):
             return tertiary
         
         try:
-            if os.path.exists(obj.banner.path):
-                palette, created = ColorPalette.objects.get_or_create(image_path=obj.banner.path)
-                if palette.tertiary_color:
-                    tertiary = json.loads(palette.tertiary_color)
-                    cache.set(cache_key, tertiary, timeout=3600)
-                    return tertiary
+            # Use string representation instead of path
+            banner_key = str(obj.event.banner)
+            palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
+            if palette.tertiary_color:
+                tertiary = json.loads(palette.tertiary_color)
+                cache.set(cache_key, tertiary, timeout=3600)
+                return tertiary
                     
-                # If not in database, calculate all colors at once
-                color_palette = calculate_colors(obj.banner.path)
-                if color_palette and color_palette.tertiary_color:
-                    tertiary = json.loads(color_palette.tertiary_color)
-                    cache.set(cache_key, tertiary, timeout=3600)
-                    return tertiary
+            # If not in database, calculate all colors at once
+            color_palette = calculate_colors(obj.event.banner)
+            if color_palette and color_palette.tertiary_color:
+                tertiary = json.loads(color_palette.tertiary_color)
+                cache.set(cache_key, tertiary, timeout=3600)
+                return tertiary
         except Exception as e:
             print(f"Error accessing color palette: {e}")
         
         return None
 
     def get_shadow_color(self, obj):
-        if not obj.banner:
+        if not obj.event.banner:
             return None
             
         cache_key = f"event_{obj.id}_shadow_color"
@@ -155,19 +158,20 @@ class EventSerializer(serializers.ModelSerializer):
             return shadow_color
             
         try:
-            if os.path.exists(obj.banner.path):
-                palette, created = ColorPalette.objects.get_or_create(image_path=obj.banner.path)
-                if palette.shadow_color:
-                    shadow_color = json.loads(palette.shadow_color)
-                    cache.set(cache_key, shadow_color, timeout=3600)
-                    return shadow_color
+            # Use string representation instead of path
+            banner_key = str(obj.event.banner)
+            palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
+            if palette.shadow_color:
+                shadow_color = json.loads(palette.shadow_color)
+                cache.set(cache_key, shadow_color, timeout=3600)
+                return shadow_color
                 
-                # If not in database, calculate all colors at once
-                color_palette = calculate_colors(obj.banner.path)
-                if color_palette and color_palette.shadow_color:
-                    shadow_color = json.loads(color_palette.shadow_color)
-                    cache.set(cache_key, shadow_color, timeout=3600)
-                    return shadow_color
+            # If not in database, calculate all colors at once
+            color_palette = calculate_colors(obj.event.banner)
+            if color_palette and color_palette.shadow_color:
+                shadow_color = json.loads(color_palette.shadow_color)
+                cache.set(cache_key, shadow_color, timeout=3600)
+                return shadow_color
         except Exception as e:
             print(f"Error accessing color palette: {e}")
         
