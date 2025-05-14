@@ -111,6 +111,7 @@ const Club = () => {
         return () => io.disconnect();
     }, []);
 
+    // Near the top of the render function, update these lines:
     const sec = club?.secondary_color?.join(',') || '0,0,0';
     const dom = club?.dominant_color?.join(',') || '255,255,255';
     const ter = club?.tertiary_color?.join(',') || '128,128,128';
@@ -221,13 +222,20 @@ const Club = () => {
             
             if (mResp.ok) {
                 const md = await mResp.json();
+                console.log("Raw members data:", md); // Add this for debugging
+                
+                // Make sure to properly extract member data from the API response
                 const membersList = (md.results || []).map(m => ({
-                    full_name: m.full_name || m.student?.full_name || 'Unknown',
-                    studentid: m.studentid || m.student?.studentid || 'No ID',
+                    id: m.id || m.student?.id,
+                    full_name: m.student?.full_name || m.full_name || 'Unknown',
+                    studentid: m.student?.studentid || m.studentid || 'No ID',
                     position: m.position || 'Member',
                     custom_position: m.custom_position || '',
-                    profile_picture: m.profile_picture || m.student?.profile_picture || null
+                    profile_picture: m.student?.profile_picture || m.profile_picture || null
                 }));
+                
+                console.log("Transformed members list:", membersList); // Add this for debugging
+                setMembers(membersList);
                 
                 setMembers(membersList);
                 

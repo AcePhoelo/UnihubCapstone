@@ -63,17 +63,30 @@ class ClubSerializer(serializers.ModelSerializer):
             
         # If not in cache, try to get from database
         try:
-            if os.path.exists(obj.banner.path):
-                palette, created = ColorPalette.objects.get_or_create(image_path=obj.banner.path)
-                if palette.dominant_color:
-                    dominant_color = json.loads(palette.dominant_color)
-                    # Store in cache for faster subsequent access
-                    cache.set(cache_key, dominant_color, timeout=3600)
-                    return dominant_color
+            # Just use the string representation of the banner URL as the key
+            banner_key = str(obj.banner)
+            palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
+            
+            if palette.dominant_color:
+                dominant_color = json.loads(palette.dominant_color)
+                # Store in cache for faster subsequent access
+                cache.set(cache_key, dominant_color, timeout=3600)
+                return dominant_color
                     
-                # If we don't have it in the database yet, calculate it
-                try:
-                    color_thief = ColorThief(obj.banner.path)
+            # If we don't have it in the database yet, calculate it
+            try:
+                import tempfile
+                import urllib.request
+                
+                # Get the URL to the image (works with S3 or local)
+                img_url = obj.banner.url
+                
+                # Download to a temp file
+                with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                    urllib.request.urlretrieve(img_url, temp_file.name)
+                    
+                    # Process image with ColorThief
+                    color_thief = ColorThief(temp_file.name)
                     color_palette = color_thief.get_palette(color_count=3, quality=1)
                     dominant_color = color_palette[0]
                     
@@ -84,9 +97,14 @@ class ClubSerializer(serializers.ModelSerializer):
                     palette.dominant_color = json.dumps(dominant_color)
                     palette.save()
                     
+                    # Clean up temp file
+                    import os
+                    os.unlink(temp_file.name)
+                    
                     return dominant_color
-                except Exception as e:
-                    print(f"Error calculating dominant color: {e}")
+                    
+            except Exception as e:
+                print(f"Error calculating dominant color: {e}")
         except Exception as e:
             print(f"Error accessing color palette: {e}")
         
@@ -103,17 +121,31 @@ class ClubSerializer(serializers.ModelSerializer):
             return secondary
         
         try:
-            if os.path.exists(obj.banner.path):
-                palette, created = ColorPalette.objects.get_or_create(image_path=obj.banner.path)
-                if palette.secondary_color:
-                    secondary = json.loads(palette.secondary_color)
-                    cache.set(cache_key, secondary, timeout=3600)
-                    return secondary
+            # Just use the string representation of the banner URL as the key
+            banner_key = str(obj.banner)
+            palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
+            
+            if palette.secondary_color:
+                secondary = json.loads(palette.secondary_color)
+                cache.set(cache_key, secondary, timeout=3600)
+                return secondary
                     
-                # If not in database, calculate it
-                try:
-                    color_thief = ColorThief(obj.banner.path)
+            # If not in database, calculate it
+            try:
+                import tempfile
+                import urllib.request
+                
+                # Get the URL to the image (works with S3 or local)
+                img_url = obj.banner.url
+                
+                # Download to a temp file
+                with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                    urllib.request.urlretrieve(img_url, temp_file.name)
+                    
+                    # Process image with ColorThief
+                    color_thief = ColorThief(temp_file.name)
                     color_palette = color_thief.get_palette(color_count=3, quality=1)
+                    
                     if len(color_palette) > 1:
                         secondary = color_palette[1]
                         
@@ -124,9 +156,14 @@ class ClubSerializer(serializers.ModelSerializer):
                         palette.secondary_color = json.dumps(secondary)
                         palette.save()
                         
+                        # Clean up temp file
+                        import os
+                        os.unlink(temp_file.name)
+                        
                         return secondary
-                except Exception as e:
-                    print(f"Error calculating secondary color: {e}")
+                        
+            except Exception as e:
+                print(f"Error calculating secondary color: {e}")
         except Exception as e:
             print(f"Error accessing color palette: {e}")
         
@@ -143,17 +180,31 @@ class ClubSerializer(serializers.ModelSerializer):
             return tertiary
         
         try:
-            if os.path.exists(obj.banner.path):
-                palette, created = ColorPalette.objects.get_or_create(image_path=obj.banner.path)
-                if palette.tertiary_color:
-                    tertiary = json.loads(palette.tertiary_color)
-                    cache.set(cache_key, tertiary, timeout=3600)
-                    return tertiary
+            # Just use the string representation of the banner URL as the key
+            banner_key = str(obj.banner)
+            palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
+            
+            if palette.tertiary_color:
+                tertiary = json.loads(palette.tertiary_color)
+                cache.set(cache_key, tertiary, timeout=3600)
+                return tertiary
                     
-                # If not in database, calculate it
-                try:
-                    color_thief = ColorThief(obj.banner.path)
+            # If not in database, calculate it
+            try:
+                import tempfile
+                import urllib.request
+                
+                # Get the URL to the image (works with S3 or local)
+                img_url = obj.banner.url
+                
+                # Download to a temp file
+                with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                    urllib.request.urlretrieve(img_url, temp_file.name)
+                    
+                    # Process image with ColorThief
+                    color_thief = ColorThief(temp_file.name)
                     color_palette = color_thief.get_palette(color_count=3, quality=1)
+                    
                     if len(color_palette) > 2:
                         tertiary = color_palette[2]
                         
@@ -164,9 +215,14 @@ class ClubSerializer(serializers.ModelSerializer):
                         palette.tertiary_color = json.dumps(tertiary)
                         palette.save()
                         
+                        # Clean up temp file
+                        import os
+                        os.unlink(temp_file.name)
+                        
                         return tertiary
-                except Exception as e:
-                    print(f"Error calculating tertiary color: {e}")
+                        
+            except Exception as e:
+                print(f"Error calculating tertiary color: {e}")
         except Exception as e:
             print(f"Error accessing color palette: {e}")
         
@@ -183,34 +239,36 @@ class ClubSerializer(serializers.ModelSerializer):
             return shadow_color
             
         try:
-            if os.path.exists(obj.banner.path):
-                palette, created = ColorPalette.objects.get_or_create(image_path=obj.banner.path)
-                if palette.shadow_color:
-                    shadow_color = json.loads(palette.shadow_color)
-                    cache.set(cache_key, shadow_color, timeout=3600)
-                    return shadow_color
+            # Just use the string representation of the banner URL as the key
+            banner_key = str(obj.banner)
+            palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
+            
+            if palette.shadow_color:
+                shadow_color = json.loads(palette.shadow_color)
+                cache.set(cache_key, shadow_color, timeout=3600)
+                return shadow_color
                 
-                # If not in database, calculate it
-                dominant_color = self.get_dominant_color(obj)
-                if dominant_color:
-                    try:
-                        r, g, b = [x / 255.0 for x in dominant_color]
-                        h, l, s = colorsys.rgb_to_hls(r, g, b)
-                        l = max(0, l * 0.3)
-                        s = max(0, s * 0.5)
-                        r, g, b = colorsys.hls_to_rgb(h, l, s)
-                        shadow_color = [int(r * 255), int(g * 255), int(b * 255)]
-                        
-                        # Save to cache
-                        cache.set(cache_key, shadow_color, timeout=3600)
-                        
-                        # Save to database
-                        palette.shadow_color = json.dumps(shadow_color)
-                        palette.save()
-                        
-                        return shadow_color
-                    except Exception as e:
-                        print(f"Error calculating shadow color: {e}")
+            # If not in database, calculate it
+            dominant_color = self.get_dominant_color(obj)
+            if dominant_color:
+                try:
+                    r, g, b = [x / 255.0 for x in dominant_color]
+                    h, l, s = colorsys.rgb_to_hls(r, g, b)
+                    l = max(0, l * 0.3)
+                    s = max(0, s * 0.5)
+                    r, g, b = colorsys.hls_to_rgb(h, l, s)
+                    shadow_color = [int(r * 255), int(g * 255), int(b * 255)]
+                    
+                    # Save to cache
+                    cache.set(cache_key, shadow_color, timeout=3600)
+                    
+                    # Save to database
+                    palette.shadow_color = json.dumps(shadow_color)
+                    palette.save()
+                    
+                    return shadow_color
+                except Exception as e:
+                    print(f"Error calculating shadow color: {e}")
         except Exception as e:
             print(f"Error accessing color palette: {e}")
         

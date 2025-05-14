@@ -83,37 +83,57 @@ const ClubDirectory = () => {
 
                 const data = await res.json();
 
-                const enriched = await Promise.all(data.map(async club => {
+                const enriched = data.map(club => {
                     try {
-                        const imgRes = await fetch(`http://54.169.81.75:8000${club.banner}`);
-                        const blob = await imgRes.blob();
-                        const url = URL.createObjectURL(blob);
-                        const img = new Image();
-                        img.src = url;
-
-                        await new Promise((resolve, reject) => {
-                            img.onload = () => resolve(true);
-                            img.onerror = reject;
-                        });
-
-                        const palette = new ColorThief().getPalette(img, 3);
-                        URL.revokeObjectURL(url);
-                        const [r, g, b] = palette[0];
-
-                        return {
-                            ...club,
-                            hoverBackground: createGradientFromPalette(palette, 4),
-                            hoverColor: `rgb(${r}, ${g}, ${b})`,
-                        };
-                    } catch {
+                        // Use the colors from the backend API
+                        if (club.dominant_color && club.secondary_color && club.tertiary_color) {
+                            // Create a palette from the backend-provided colors
+                            const palette = [
+                                club.dominant_color,
+                                club.secondary_color,
+                                club.tertiary_color
+                            ];
+                            
+                            return {
+                                ...club,
+                                // Use the same createGradientFromPalette function
+                                hoverBackground: createGradientFromPalette(palette, 4),
+                                hoverColor: `rgb(${club.dominant_color.join(',')})`,
+                                
+                                // Make sure banner URLs are handled correctly
+                                banner: club.banner?.startsWith('http') 
+                                    ? club.banner 
+                                    : `http://54.169.81.75:8000${club.banner}`
+                            };
+                        } else {
+                            // Fallback if no color data
+                            return {
+                                ...club,
+                                hoverBackground: 'linear-gradient(to right, #ccc, #eee)',
+                                hoverColor: 'rgba(200,200,200,0.5)',
+                                
+                                // Make sure banner URLs are handled correctly
+                                banner: club.banner?.startsWith('http') 
+                                    ? club.banner 
+                                    : `http://54.169.81.75:8000${club.banner}`
+                            };
+                        }
+                    } catch (error) {
+                        console.error("Error processing club colors:", error);
                         return {
                             ...club,
                             hoverBackground: 'linear-gradient(to right, #ccc, #eee)',
                             hoverColor: 'rgba(200,200,200,0.5)',
+                            
+                            // Make sure banner URLs are handled correctly
+                            banner: club.banner?.startsWith('http') 
+                                ? club.banner 
+                                : `http://54.169.81.75:8000${club.banner}`
                         };
                     }
-                }));
+                });
 
+                // Since we're not using Promise.all anymore:
                 setClubs(enriched);
             } catch (e) {
                 console.error(e);
@@ -264,7 +284,9 @@ const ClubDirectory = () => {
                         >
                             {pinnedClubs[featuredIndex].banner && (
                                 <img
-                                    src={`http://54.169.81.75:8000${pinnedClubs[featuredIndex].banner}`}
+                                    src={pinnedClubs[featuredIndex].banner.startsWith('http') 
+                                        ? pinnedClubs[featuredIndex].banner 
+                                        : `http://54.169.81.75:8000${pinnedClubs[featuredIndex].banner}`}
                                     alt={pinnedClubs[featuredIndex].name}
                                     className="featured-club-image"
                                 />
@@ -300,11 +322,11 @@ const ClubDirectory = () => {
                             >
                                 <div className="club-card">
                                     {club.banner ? (
-                                        <img
-                                            src={`http://54.169.81.75:8000${club.banner}`}
-                                            alt={club.name}
-                                            className="club-card-banner"
-                                        />
+                                            <img
+                                                src={club.banner.startsWith('http') ? club.banner : `http://54.169.81.75:8000${club.banner}`}
+                                                alt={club.name}
+                                                className="club-card-banner"
+                                            />
                                     ) : (
                                         <div className="club-card-banner">No Banner Available</div>
                                     )}
