@@ -17,15 +17,19 @@ class ClubListSerializer(serializers.ModelSerializer):
 
 
 class ClubMembershipSerializer(serializers.ModelSerializer):
-    student = serializers.SerializerMethodField()  # Use lazy import for StudentSerializer
-
+    student = serializers.SerializerMethodField()
+    effective_position = serializers.SerializerMethodField()
+    
     class Meta:
         model = ClubMembership
-        fields = ['id', 'student', 'position', 'custom_position']
-
+        fields = ['id', 'student', 'position', 'custom_position', 'effective_position']
+    
     def get_student(self, obj):
-        from user_profile.serializers import StudentSerializer  # Lazy import
-        return StudentSerializer(obj.student, context=self.context).data
+        from user_profile.serializers import StudentSerializer
+        return StudentSerializer(obj.student).data
+    
+    def get_effective_position(self, obj):
+        return obj.get_effective_position()
 
 
 class ClubSerializer(serializers.ModelSerializer):

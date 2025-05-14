@@ -98,13 +98,18 @@ class ClubMembership(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     position = models.CharField(max_length=50, choices=POSITION_CHOICES, default='Member')
     custom_position = models.CharField(max_length=100, null=True, blank=True)
-
+    
     class Meta:
         unique_together = ('student', 'club')
         ordering = ['position', 'student__full_name']
 
     def __str__(self):
-        return f"{self.student.full_name} - {self.club.name} ({self.position})"
+        position_display = self.custom_position if self.custom_position else self.position
+        return f"{self.student.full_name} - {self.club.name} ({position_display})"
+    
+    def get_effective_position(self):
+        """Return the effective position, prioritizing custom positions"""
+        return self.custom_position if self.custom_position else self.position
     
 class ColorPalette(models.Model):
     """Stores pre-calculated color data for images to avoid recalculation."""
