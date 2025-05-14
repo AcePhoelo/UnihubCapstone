@@ -1,0 +1,37 @@
+Deploy S3
+- Use s3-deployment-ec2 
+- Empty the bucket (kalo ada folder dalemnya) 
+- Dari my-app frontend, npm run build 
+(make sure,
+1. IP address udh diganti ke 54.169.81.75 (Change all fetch api (127.0.0.1:8000), 
+2. build folder sebelumnya kalo ada, udah dihapus biar ga ke double )
+- buka build folder, drag semua file upload ke S3 
+- Then go to properties, scroll kebawah cek URL endpoint
+- Kalo belom ada extension MOESIF, download dulu (kayanya udh gua donlodin)
+- Di turn on extension nya trus copas URL endpoint
+
+Deploy EC2
+- Start backend-ec2-final instance
+- Click Connect (it's next to Instance State button)
+- ls --> cd UnihubCapstone
+- git branch (make sure we're on main branch; main is highlighted green)
+- git checkout main (if you're not on main branch)
+- git pull origin main
+- Connect to the server (cd backend --> python3 manage.py runserver 0.0.0.0:8000)
+- Go back to the instance, choose the Open Address option on PUBLIC IPV4 ADDRESS
+- Ensure the link is http://.....:8000, not https: ...
+
+
+RDS (DONE)
+- Create Database
+- Ensure it's the same VPC as backend-ec2-final (uses launch-wizard-4 or sg-0f261e2d599f07a23)
+- Edit inbound rules so that it's connected to my IP and EC2's IP
+
+
+
+Opening the fully functional website
+- Go to the S3 bucket (S3-deployment-ec2)
+- Go to Properties tab
+- Scroll to the very bottom, copy the bucket website endpoint
+- Enable MOESIF extension
+- Paste the website endpoint and you have reached your destination
