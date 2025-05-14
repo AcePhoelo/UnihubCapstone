@@ -43,7 +43,7 @@ ALLOWED_HOSTS = [
     "localhost",  # Frontend local
     "127.0.0.1",  # Backend (change to 54.169.81.75:8000)
     "54.169.81.75",
-    "curtinunihubplus.com:8000",
+    "curtinunihubplus.com",
     "www.curtinunihubplus.com",
 ]
 
