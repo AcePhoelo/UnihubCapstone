@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     "event.add_event",
     "event.event_registration",
     "event.event_page",
+    "rest_framework_simplejwt.token_blacklist",
     "storages",
 ]
 
@@ -227,6 +228,12 @@ LOGGING = {
 
 SECURE_SSL_REDIRECT = False
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),  # Longer access token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # 7-day refresh token
+    'ROTATE_REFRESH_TOKENS': True,                # Get new refresh token when refreshing
+    'BLACKLIST_AFTER_ROTATION': True,             # Blacklist old refresh tokens
+}
 
 # USE THIS AFTER TESTING
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
