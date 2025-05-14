@@ -36,6 +36,12 @@ const Calendar = () => {
         }
         return hours * 60 + minutes;
     };
+    const decodeHTMLEntities = (text) => {
+    if (!text) return '';
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = text;
+    return textArea.value;
+    };
 
     const formatLocalDate = (date) => {
         const year = date.getFullYear();
@@ -134,8 +140,10 @@ const Calendar = () => {
     const handleCalendarClick = () => navigate('/calendar');
 
     const getInitials = (fullName) => {
-        const names = fullName.trim().split(' ');
-        return names[0]?.charAt(0).toUpperCase() + (names[1]?.charAt(0).toUpperCase() || '');
+        const decodedName = decodeHTMLEntities(fullName || '');
+        const names = decodedName.trim().split(' ');
+        const initials = names[0]?.charAt(0).toUpperCase() + (names[1]?.charAt(0).toUpperCase() || '');
+        return initials;
     };
 
     const handlePrevMonth = () => {

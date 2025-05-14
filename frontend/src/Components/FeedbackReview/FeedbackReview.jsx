@@ -62,11 +62,12 @@ const FeedbackReview = () => {
         }
     };
     
+    // Modify the getInitials function
     const getInitials = (fullName) => {
-        if (!fullName) return 'N';
-        const decodedName = decodeHTMLEntities(fullName);
+        const decodedName = decodeHTMLEntities(fullName || '');
         const names = decodedName.trim().split(' ');
-        return names[0]?.charAt(0).toUpperCase() + (names[1]?.charAt(0).toUpperCase() || '');
+        const initials = names[0]?.charAt(0).toUpperCase() + (names[1]?.charAt(0).toUpperCase() || '');
+        return initials;
     };
     
     const formatName = (fullName) => {

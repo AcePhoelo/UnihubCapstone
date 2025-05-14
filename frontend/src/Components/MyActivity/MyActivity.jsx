@@ -214,11 +214,11 @@ const MyActivity = () => {
                         id: club.id || "",
                         name: decodeHTMLEntities(club.name || "Unknown Club"),
                         description: decodeHTMLEntities(club.description || "Club Leader"),
-                        // Add complete URLs with domain
-                        logo: club.logo ? `http://54.169.81.75:8000${club.logo}` : null,
-                        banner: club.banner ? `http://54.169.81.75:8000${club.banner}` : null,
-                        imageUrl: club.banner ? `http://54.169.81.75:8000${club.banner}` : null,
-                        logoUrl: club.logo ? `http://54.169.81.75:8000${club.logo}` : null
+                        // Fix banner URLs with complete paths
+                        logo: club.logo ? (club.logo.startsWith('http') ? club.logo : `http://54.169.81.75:8000${club.logo}`) : null,
+                        banner: club.banner ? (club.banner.startsWith('http') ? club.banner : `http://54.169.81.75:8000${club.banner}`) : null,
+                        imageUrl: club.banner ? (club.banner.startsWith('http') ? club.banner : `http://54.169.81.75:8000${club.banner}`) : null,
+                        logoUrl: club.logo ? (club.logo.startsWith('http') ? club.logo : `http://54.169.81.75:8000${club.logo}`) : null
                     }))
                     : [];
                 
@@ -228,13 +228,13 @@ const MyActivity = () => {
                 // Process "My Clubs" section, filtering out any clubs that appear in "Clubs I Lead"
                 const userClubs = Array.isArray(userData.clubsjoined)
                     ? userData.clubsjoined
-                        .filter(club => !leadershipClubIds.includes(club.id)) // Filter out duplicates
+                        .filter(club => !leadershipClubIds.includes(club.id))
                         .map(club => ({
                             id: club.id || "",
                             name: decodeHTMLEntities(club.name || "Unknown Club"), 
                             description: decodeHTMLEntities(club.description || ""),
-                            imageUrl: club.banner ? `http://54.169.81.75:8000${club.banner}` : null,
-                            logoUrl: club.logo ? `http://54.169.81.75:8000${club.logo}` : null,
+                            imageUrl: club.banner ? (club.banner.startsWith('http') ? club.banner : `http://54.169.81.75:8000${club.banner}`) : null,
+                            logoUrl: club.logo ? (club.logo.startsWith('http') ? club.logo : `http://54.169.81.75:8000${club.logo}`) : null,
                         }))
                     : [];
 
@@ -326,6 +326,7 @@ const MyActivity = () => {
     const handleProfileClick = () => navigate('/profile');
     const handleCalendarClick = () => navigate('/calendar');
 
+    // Modify the getInitials function
     const getInitials = (fullName) => {
         const decodedName = decodeHTMLEntities(fullName || '');
         const names = decodedName.trim().split(' ');

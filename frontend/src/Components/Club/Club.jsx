@@ -119,13 +119,12 @@ const Club = () => {
         ? `linear-gradient(to left, rgb(${sec}) 0%, rgb(${dom}) 33%, rgb(${ter}) 67%, rgb(${sec}) 100%)`
         : 'transparent';
 
-    const getInitials = (name = '') =>
-        name
-            .trim()
-            .split(/\s+/)
-            .filter(Boolean)
-            .map(p => p.charAt(0).toUpperCase())
-            .join('');
+    const getInitials = (fullName) => {
+        const decodedName = decodeHTMLEntities(fullName || '');
+        const names = decodedName.trim().split(' ');
+        const initials = names[0]?.charAt(0).toUpperCase() + (names[1]?.charAt(0).toUpperCase() || '');
+        return initials;
+    };
 
     const fetchClubDetails = async () => {
         setLoading(true);
@@ -217,54 +216,70 @@ const Club = () => {
             const headers = { 'Content-Type': 'application/json' };
             if (!isGuest && token) headers.Authorization = `Bearer ${token}`;
 
-            // First fetch members data (works for both guests and authenticated users)
+            // First fetch members data
             const mResp = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/members/`, { headers });
             
             if (mResp.ok) {
                 const md = await mResp.json();
-                console.log("Raw members data:", md); // Add this for debugging
+                console.log("Raw members data:", md);
                 
-                // Make sure to properly extract member data from the API response
+                // Enhanced member transformation to ensure we capture all required fields
                 const membersList = (md.results || []).map(m => ({
-                    id: m.id || m.student?.id,
-                    full_name: m.student?.full_name || m.full_name || 'Unknown',
+                    id: m.id || m.student?.id || '',
+                    full_name: decodeHTMLEntities(m.student?.full_name || m.full_name || 'Unknown'),
                     studentid: m.student?.studentid || m.studentid || 'No ID',
                     position: m.position || 'Member',
                     custom_position: m.custom_position || '',
                     profile_picture: m.student?.profile_picture || m.profile_picture || null
                 }));
                 
-                console.log("Transformed members list:", membersList); // Add this for debugging
+                console.log("Transformed members list:", membersList);
                 setMembers(membersList);
                 
-                setMembers(membersList);
+                // Get unique roles directly from the fetched member data
+                const uniquePositions = new Set();
+                membersList.forEach(m => {
+                    // Ensure President is always included
+                    if (m.position === 'President') uniquePositions.add('President');
+                    // Add any custom position if it exists
+                    if (m.custom_position) uniquePositions.add(m.custom_position);
+                    // Otherwise add the regular position
+                    else if (m.position) uniquePositions.add(m.position);
+                });
                 
-                // For guests, extract unique roles directly from members data
-                if (isGuest) {
-                    const uniquePositions = [...new Set(
-                        membersList
-                            .map(m => m.custom_position || m.position)
-                            .filter(Boolean)
-                    )];
-                    
-                    setClubRoles(uniquePositions.map(position => ({
-                        id: position,
-                        name: position
-                    })));
-                }
+                // Make sure 'Member' is always included
+                uniquePositions.add('Member');
+                
+                const defaultRoles = ['President', 'Member'];
+                // Sort to ensure President is first, Member is last, and custom roles in between
+                const sortedPositions = [...uniquePositions].sort((a, b) => {
+                    if (a === 'President') return -1;
+                    if (b === 'President') return 1;
+                    if (a === 'Member') return 1;
+                    if (b === 'Member') return -1;
+                    return a.localeCompare(b);
+                });
+                
+                setClubRoles(sortedPositions.map(position => ({
+                    id: position,
+                    name: position
+                })));
             }
 
-            // Try to get roles from API (will work for authenticated users)
+            // Try to get official roles from API (for authenticated users)
             if (!isGuest) {
                 try {
                     const rResp = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/roles/`, { headers });
                     if (rResp.ok) {
                         const rd = await rResp.json();
-                        setClubRoles(rd.roles || []);
+                        if (rd.roles && rd.roles.length > 0) {
+                            // This is for roles defined in the backend
+                            setClubRoles(rd.roles);
+                        }
+                        // else keeping the roles we extracted from the members data
                     }
                 } catch (roleErr) {
                     console.error('Error fetching roles:', roleErr);
-                    // Already handled roles for guests above
                 }
             }
         } catch (err) {
@@ -706,7 +721,19 @@ const Club = () => {
                                     className="leader-photo"
                                     style={{ cursor: 'pointer' }}
                                     onClick={() => navigateToProfile(club.president)}
-                                    onError={(e) => { e.target.onerror = null; e.target.src = '/default-profile.png'; }} // Fallback for broken images
+                                    onError={(e) => { e.target.onerror = null; e.target.src = '/default-profile.png'; 
+                                                const parent = e.target.parentElement;
+                                                const initialsEl = document.createElement('div');
+                                                initialsEl.className = "leader-photo";
+                                                initialsEl.style.display = "flex";
+                                                initialsEl.style.alignItems = "center";
+                                                initialsEl.style.justifyContent = "center";
+                                                initialsEl.style.backgroundColor = "#2074AC";
+                                                initialsEl.style.color = "white";
+                                                initialsEl.style.fontSize = "18px";
+                                                initialsEl.innerText = getInitials(club.president?.full_name || '');
+                                                parent.appendChild(initialsEl);
+                                            }} // Fallback for broken images
                                 />
                                 <div className="club-leader-name">
                                     {(club.president?.full_name || 'No Leader').split(' ').map((n, i) =>
@@ -903,7 +930,7 @@ const Club = () => {
                                             )}
                                         </div>
                                         <div className="members-body">
-                                            {/* 1. President section (always first) */}
+                                            {/* Always show President section first */}
                                             <MemberCategorySection
                                                 title="President"
                                                 members={members.filter(m => m.position === 'President')}
@@ -911,15 +938,15 @@ const Club = () => {
                                                 getInitials={getInitials}
                                             />
                                             
-                                            {/* 2. All other custom roles (in the middle) */}
+                                            {/* Show all custom/preset roles except President and Member */}
                                             {clubRoles
-                                                .filter(r => !['President', 'Member'].includes(r.name))
+                                                .filter(r => r.name !== 'President' && r.name !== 'Member')
                                                 .map(role => (
                                                     <MemberCategorySection
-                                                        key={role.id}
+                                                        key={role.id || role.name} // Use both as fallback
                                                         title={decodeHTMLEntities(role.name)}
                                                         members={members.filter(
-                                                            m =>
+                                                            m => 
                                                                 decodeHTMLEntities(m.position) === decodeHTMLEntities(role.name) ||
                                                                 decodeHTMLEntities(m.custom_position) === decodeHTMLEntities(role.name)
                                                         )}
@@ -928,10 +955,13 @@ const Club = () => {
                                                     />
                                                 ))}
                                             
-                                            {/* 3. Regular Members section (always last) */}
+                                            {/* Always show regular Members section last */}
                                             <MemberCategorySection
                                                 title="Members"
-                                                members={members.filter(m => m.position === 'Member' && !m.custom_position)}
+                                                members={members.filter(m => 
+                                                    (m.position === 'Member' || !m.position) && 
+                                                    !m.custom_position
+                                                )}
                                                 searchQuery={searchQuery}
                                                 getInitials={getInitials}
                                             />
@@ -940,7 +970,7 @@ const Club = () => {
                                             {members.filter(m =>
                                                 !searchQuery ||
                                                 (m.full_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                                m.studentid.includes(searchQuery)
+                                                (m.studentid || '').includes(searchQuery)
                                             ).length === 0 && (
                                                 <div className="no-results">
                                                     No members found matching your search.

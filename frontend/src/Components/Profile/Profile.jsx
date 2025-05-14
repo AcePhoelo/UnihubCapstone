@@ -124,8 +124,17 @@ const Profile = () => {
         navigate('/creation-club');
     };
 
+    const decodeHTMLEntities = (text) => {
+    if (!text) return '';
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = text;
+    return textArea.value;
+    };
+
+    // Modify the getInitials function
     const getInitials = (fullName) => {
-        const names = fullName.trim().split(' ');
+        const decodedName = decodeHTMLEntities(fullName || '');
+        const names = decodedName.trim().split(' ');
         const initials = names[0]?.charAt(0).toUpperCase() + (names[1]?.charAt(0).toUpperCase() || '');
         return initials;
     };

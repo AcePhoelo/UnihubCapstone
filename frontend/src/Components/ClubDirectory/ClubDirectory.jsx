@@ -155,9 +155,12 @@ const ClubDirectory = () => {
 
     const handleNav = path => () => navigate(path);
 
-    const getInitials = (name = '') => {
-        const parts = name.trim().split(/\s+/).filter(Boolean);
-        return parts.map(part => part.charAt(0).toUpperCase()).join('');
+    // Modify the getInitials function
+    const getInitials = (fullName) => {
+        const decodedName = decodeHTMLEntities(fullName || '');
+        const names = decodedName.trim().split(' ');
+        const initials = names[0]?.charAt(0).toUpperCase() + (names[1]?.charAt(0).toUpperCase() || '');
+        return initials;
     };
 
     const featuredClub = clubs[0];

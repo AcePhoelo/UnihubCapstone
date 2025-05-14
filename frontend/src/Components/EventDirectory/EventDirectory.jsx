@@ -147,10 +147,12 @@ const EventDirectory = () => {
     //     }
     // }, [events, colorsReady]);
 
-    const getInitials = name => {
-        const decodedName = decodeHTMLEntities(name || '');
-        const [first = '', last = ''] = decodedName.trim().split(' ');
-        return (first[0] || '').toUpperCase() + (last[0] || '').toUpperCase();
+    // Modify the getInitials function
+    const getInitials = (fullName) => {
+        const decodedName = decodeHTMLEntities(fullName || '');
+        const names = decodedName.trim().split(' ');
+        const initials = names[0]?.charAt(0).toUpperCase() + (names[1]?.charAt(0).toUpperCase() || '');
+        return initials;
     };
 
     useEffect(() => {
