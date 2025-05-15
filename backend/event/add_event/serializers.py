@@ -55,7 +55,7 @@ class EventSerializer(serializers.ModelSerializer):
     
         
     def get_dominant_color(self, obj):
-        if not obj.event.banner:  # Note: Using event.banner instead of banner directly
+        if not obj.banner:  # Note: Using event.banner instead of banner directly
             return None
             
         # Try to get from cache first (for fastest access)
@@ -68,7 +68,7 @@ class EventSerializer(serializers.ModelSerializer):
         # If not in cache, try to get from database
         try:
             # Use the string representation of the banner as the key
-            banner_key = str(obj.event.banner)
+            banner_key = str(obj.banner)
             palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
             if palette.dominant_color:
                 dominant_color = json.loads(palette.dominant_color)
@@ -77,7 +77,7 @@ class EventSerializer(serializers.ModelSerializer):
                 return dominant_color
                     
             # If we don't have it in the database yet, calculate it
-            color_palette = calculate_colors(obj.event.banner)
+            color_palette = calculate_colors(obj.banner)
             if color_palette and color_palette.dominant_color:
                 dominant_color = json.loads(color_palette.dominant_color)
                 cache.set(cache_key, dominant_color, timeout=3600)
@@ -88,7 +88,7 @@ class EventSerializer(serializers.ModelSerializer):
         return None
 
     def get_secondary_color(self, obj):
-        if not obj.event.banner:
+        if not obj.banner:
             return None
             
         cache_key = f"event_{obj.id}_secondary_color"
@@ -99,7 +99,7 @@ class EventSerializer(serializers.ModelSerializer):
         
         try:
             # Use string representation instead of path
-            banner_key = str(obj.event.banner)
+            banner_key = str(obj.banner)
             palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
             if palette.secondary_color:
                 secondary = json.loads(palette.secondary_color)
@@ -107,7 +107,7 @@ class EventSerializer(serializers.ModelSerializer):
                 return secondary
                     
             # If not in database, calculate all colors at once
-            color_palette = calculate_colors(obj.event.banner)
+            color_palette = calculate_colors(obj.banner)
             if color_palette and color_palette.secondary_color:
                 secondary = json.loads(color_palette.secondary_color)
                 cache.set(cache_key, secondary, timeout=3600)
@@ -118,7 +118,7 @@ class EventSerializer(serializers.ModelSerializer):
         return None
 
     def get_tertiary_color(self, obj):
-        if not obj.event.banner:
+        if not obj.banner:
             return None
             
         cache_key = f"event_{obj.id}_tertiary_color"
@@ -129,7 +129,7 @@ class EventSerializer(serializers.ModelSerializer):
         
         try:
             # Use string representation instead of path
-            banner_key = str(obj.event.banner)
+            banner_key = str(obj.banner)
             palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
             if palette.tertiary_color:
                 tertiary = json.loads(palette.tertiary_color)
@@ -137,7 +137,7 @@ class EventSerializer(serializers.ModelSerializer):
                 return tertiary
                     
             # If not in database, calculate all colors at once
-            color_palette = calculate_colors(obj.event.banner)
+            color_palette = calculate_colors(obj.banner)
             if color_palette and color_palette.tertiary_color:
                 tertiary = json.loads(color_palette.tertiary_color)
                 cache.set(cache_key, tertiary, timeout=3600)
@@ -148,7 +148,7 @@ class EventSerializer(serializers.ModelSerializer):
         return None
 
     def get_shadow_color(self, obj):
-        if not obj.event.banner:
+        if not obj.banner:
             return None
             
         cache_key = f"event_{obj.id}_shadow_color"
@@ -159,7 +159,7 @@ class EventSerializer(serializers.ModelSerializer):
             
         try:
             # Use string representation instead of path
-            banner_key = str(obj.event.banner)
+            banner_key = str(obj.banner)
             palette, created = ColorPalette.objects.get_or_create(image_path=banner_key)
             if palette.shadow_color:
                 shadow_color = json.loads(palette.shadow_color)
@@ -167,7 +167,7 @@ class EventSerializer(serializers.ModelSerializer):
                 return shadow_color
                 
             # If not in database, calculate all colors at once
-            color_palette = calculate_colors(obj.event.banner)
+            color_palette = calculate_colors(obj.banner)
             if color_palette and color_palette.shadow_color:
                 shadow_color = json.loads(color_palette.shadow_color)
                 cache.set(cache_key, shadow_color, timeout=3600)
