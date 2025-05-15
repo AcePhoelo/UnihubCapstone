@@ -5,5 +5,5 @@ class ClubpageConfig(AppConfig):
     name = 'clubs'
 
     def ready(self):
-        import clubs.signals
+        pass
     

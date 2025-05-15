@@ -3,7 +3,6 @@ from event.add_event.models import Event
 from .serializers import EventListSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
-from event.add_event.models import Event
 from event.add_event.serializers import EventSerializer
 
 class EventListView(ListAPIView):
