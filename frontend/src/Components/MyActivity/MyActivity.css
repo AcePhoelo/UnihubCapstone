@@ -3,6 +3,8 @@
 .my-activity-page {
     background: #FAFAFA;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* CLUBS */

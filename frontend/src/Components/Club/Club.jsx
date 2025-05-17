@@ -748,22 +748,7 @@ const Club = () => {
                                 <h1 className="club-page-name">{decodeHTMLEntities(club.name)}</h1>
                             )}
                             <div className="club-banner-buttons">
-                                {isEditMode ? (
-                                    <>
-                                        <button className="club-banner-button save-edit" onClick={handleSaveChanges}>
-                                            Save
-                                        </button>
-                                        <button className="club-banner-button cancel-edit" onClick={handleCancelEdit}>
-                                            Cancel
-                                        </button>
-                                        <button
-                                            className="club-banner-button change-club-banner-button"
-                                            onClick={() => bannerInputRef.current.click()}
-                                        >
-                                            Change Banner
-                                        </button>
-                                    </>
-                                ) : (
+                                {!isGuest ? (
                                     <>
                                         {isClubPresident && (
                                             <button 
@@ -785,6 +770,14 @@ const Club = () => {
                                             {isUserMember ? 'Leave' : 'Join'}
                                         </button>
                                     </>
+                                ) : (
+                                    <button
+                                        className="club-banner-button join-button"
+                                        onClick={joinClub}
+                                        style={{ background: '#2074AC' }}
+                                    >
+                                        Join
+                                    </button>
                                 )}
                             </div>
                         </div>

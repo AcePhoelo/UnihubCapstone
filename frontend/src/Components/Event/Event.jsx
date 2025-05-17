@@ -21,6 +21,7 @@ const Event = () => {
     const location = useLocation();
     const { eventName } = useParams();
     const decodedName = decodeURIComponent(eventName);
+    
 
     const [isEditMode, setIsEditMode] = useState(false);
     const [editedEventName, setEditedEventName] = useState('');
@@ -60,6 +61,7 @@ const Event = () => {
     const [draftDate, setDraftDate] = useState('');
     const [draftTime, setDraftTime] = useState('');
     const [draftLocation, setDraftLocation] = useState('');
+
 
     const saveDetails = async () => {
         const token = localStorage.getItem('access_token');
@@ -205,6 +207,15 @@ const Event = () => {
                              profilePicUrl ? `http://54.169.81.75:8000${profilePicUrl}` : '');
         }
     }, [isGuest]);
+
+    useEffect(() => {
+    // Reset user-specific states when in guest mode
+    if (isGuest) {
+        setIsUserRegistered(false);
+        setIsEventCreator(false);
+        setIsClubLeaderForEvent(false);
+    }
+}, [isGuest]);
     
     useEffect(() => {
         const fetchEventData = async () => {
@@ -311,12 +322,21 @@ const Event = () => {
         fetchEventData();
     }, [decodedName]); // Only re-run when event name changes
 
-    const sec = event?.secondary_color?.join(',') || '0,0,0';
-    const dom = event?.dominant_color?.join(',') || '255,255,255';
-    const ter = event?.tertiary_color?.join(',') || '128,128,128';
-    const bgOverlay = event?.banner
-        ? `linear-gradient(to left, rgb(${sec}) 0%, rgb(${dom}) 33%, rgb(${ter}) 67%, rgb(${sec}) 100%)`
-        : 'transparent';
+const sec = event?.secondary_color ? `rgb(${event.secondary_color.join(',')})` : 'rgb(0,0,0)';
+const dom = event?.dominant_color ? `rgb(${event.dominant_color.join(',')})` : 'rgb(255,255,255)';
+const ter = event?.tertiary_color ? `rgb(${event.tertiary_color.join(',')})` : 'rgb(128,128,128)';
+const bgOverlay = event?.banner
+    ? `linear-gradient(to left, ${sec} 0%, ${dom} 33%, ${ter} 67%, ${sec} 100%)`
+    : 'transparent';
+
+// Add this near where you define the color variables:
+console.log("Event color data:", {
+    secondary: event?.secondary_color,
+    dominant: event?.dominant_color,
+    tertiary: event?.tertiary_color,
+    shadow: event?.shadow_color
+});
+console.log("Generated gradient:", bgOverlay);
 
 useEffect(() => {
     if (event && !isGuest) {
@@ -583,6 +603,8 @@ const handleRemoveParticipant = async (participantId) => {
         return <div className="event-not-found">No event found.</div>;
     }
 
+
+
 const isEventPassed = () => {
   if (!event || !event.date) return false;
   
@@ -701,12 +723,15 @@ console.log("- Can edit event:", isEventCreator || isClubLeaderForEvent);
                 </div>
             </div>
 
-            <div 
-                className={`event-banner-wrapper ${isEditMode ? 'edit-mode' : ''}`} 
-                style={{ 
-                    background: bgOverlay
-                }}
-            >      
+                <div 
+                    className={`event-banner-wrapper ${isEditMode ? 'edit-mode' : ''}`} 
+                    style={{ 
+                        background: bgOverlay,
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat',
+                        position: 'relative'
+                    }}
+                >  
                     {event.banner && (
                         <img
                             src={newBanner ? URL.createObjectURL(newBanner) : event.banner}
@@ -719,9 +744,15 @@ console.log("- Can edit event:", isEventCreator || isClubLeaderForEvent);
                     <div
                         className="banner-overlay"
                         style={{
-                            background: event.banner
-                                ? `linear-gradient(to top, rgb(${event.shadow_color?.join(',')}), transparent)`
-                                : 'transparent'
+                            background: event.banner && event.shadow_color
+                                ? `linear-gradient(to top, rgb(${event.shadow_color.join(',')}), transparent 70%)`
+                                : 'transparent',
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: '100%',
+                            zIndex: 1
                         }}
                     />
                     <div className="event-banner-content">
@@ -773,25 +804,40 @@ console.log("- Can edit event:", isEventCreator || isClubLeaderForEvent);
                                 </div>
                             ) : (
                                 <div className="event-banner-buttons">
-                                    {(isEventCreator || isClubLeaderForEvent) && (
-                                        <button
-                                            className="event-banner-button edit-event-button"
-                                            onClick={() => setIsEditMode(true)}
-                                        >
-                                            Edit
-                                        </button>
-                                    )}
+                                    {!isGuest ? (
+                                        <>
+                                            {(isEventCreator || isClubLeaderForEvent) && (
+                                                <button
+                                                    className="event-banner-button edit-event-button"
+                                                    onClick={() => setIsEditMode(true)}
+                                                >
+                                                    Edit
+                                                </button>
+                                            )}
+                                            <button
+                                                className="register-button"
+                                                onClick={hasEventPassed() ? null : (isUserRegistered ? handleCancelRegistration : handleRegisterClick)}
+                                                style={{
+                                                    background: hasEventPassed() ? '#999999' : (isUserRegistered ? '#CF2424' : '#2074AC'),
+                                                    cursor: hasEventPassed() ? 'default' : 'pointer',
+                                                }}
+                                            >
+                                                {hasEventPassed() ? 'Event\'s Over' : (isUserRegistered ? 'Cancel' : 'Register')}
+                                            </button>
+                                        </>
+                                    ) : (
                                         <button
                                             className="register-button"
-                                            onClick={hasEventPassed() ? null : (isUserRegistered ? handleCancelRegistration : handleRegisterClick)}
+                                            onClick={hasEventPassed() ? null : handleRegisterClick}
                                             style={{
-                                                background: hasEventPassed() ? '#999999' : (isUserRegistered ? '#CF2424' : '#2074AC'),
+                                                background: hasEventPassed() ? '#999999' : '#2074AC',
                                                 cursor: hasEventPassed() ? 'default' : 'pointer',
                                             }}
                                         >
-                                            {hasEventPassed() ? 'Event\'s Over' : (isUserRegistered ? 'Cancel' : 'Register')}
+                                            {hasEventPassed() ? 'Event\'s Over' : 'Register'}
                                         </button>
-                                    </div>
+                                    )}
+                                </div>
                             )}
                         </div>
                         <div className="event-banner-right">

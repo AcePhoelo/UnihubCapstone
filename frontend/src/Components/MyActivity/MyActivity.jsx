@@ -346,7 +346,7 @@ const MyActivity = () => {
     }
 
     return (
-        <div className="my-activity-page">
+        <div className="my-activity-page" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <div className="navbar">
                 <img src={logo} alt="Logo" className="curtin-logo" onClick={handleLogoClick} />
                 <div className="navbar-text">
@@ -395,7 +395,7 @@ const MyActivity = () => {
                 </div>
             </div>
 
-            <div className="activity-content-wrapper">
+            <div className="activity-content-wrapper" style={{ flex: 1 }}>
                 <div className="activity-left-column">
                     {leadershipClubs.length > 0 && (
                         <div className="activity-club-explore">
@@ -442,41 +442,47 @@ const MyActivity = () => {
                         <div className="activity-club-explore-title">My Clubs</div>
                         {error && <div className="error-text">{error}</div>}
                         <div className="activity-clubs-grid">
-                            {clubs.map((club, idx) => (
-                                <motion.div
-                                    key={club.id}
-                                    className="activity-explore-club-box"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, amount: 0.2 }}
-                                    transition={{ duration: 0.4 }}
-                                >
+                            {clubs.length > 0 ? (
+                                clubs.map((club, idx) => (
                                     <motion.div
-                                        className="activity-club-card"
-                                        onClick={() => navigateToClub(club.id, club.name)}
-                                        style={{
-                                            '--hover-bg': club.hoverBackground,
-                                            '--hover-shadow': club.hoverColor
-                                        }}
-                                        whileHover={{
-                                            scale: 1.05,
-                                            background: club.hoverBackground,
-                                            boxShadow: `0 0 25px ${club.hoverColor}`
-                                        }}
+                                        key={club.id}
+                                        className="activity-explore-club-box"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true, amount: 0.2 }}
                                         transition={{ duration: 0.4 }}
                                     >
-                                        {club.role === 'Leader' && <div className="leadership-badge">Club Leader</div>}
-                                        <img
-                                            src={club.imageUrl || '/default-club-banner.png'}
-                                            alt={club.name}
-                                            className="activity-club-card-banner"
-                                            onError={e => { e.target.onerror = null; e.target.src = '/default-club-banner.png' }}
-                                        />
-                                        <div className="activity-club-card-name">{club.name}</div>
-                                        <div className="activity-club-card-description">{club.description}</div>
+                                        <motion.div
+                                            className="activity-club-card"
+                                            onClick={() => navigateToClub(club.id, club.name)}
+                                            style={{
+                                                '--hover-bg': club.hoverBackground,
+                                                '--hover-shadow': club.hoverColor
+                                            }}
+                                            whileHover={{
+                                                scale: 1.05,
+                                                background: club.hoverBackground,
+                                                boxShadow: `0 0 25px ${club.hoverColor}`
+                                            }}
+                                            transition={{ duration: 0.4 }}
+                                        >
+                                            {club.role === 'Leader' && <div className="leadership-badge">Club Leader</div>}
+                                            <img
+                                                src={club.imageUrl || '/default-club-banner.png'}
+                                                alt={club.name}
+                                                className="activity-club-card-banner"
+                                                onError={e => { e.target.onerror = null; e.target.src = '/default-club-banner.png' }}
+                                            />
+                                            <div className="activity-club-card-name">{club.name}</div>
+                                            <div className="activity-club-card-description">{club.description}</div>
+                                        </motion.div>
                                     </motion.div>
-                                </motion.div>
-                            ))}
+                                ))
+                            ) : (
+                                <div className="empty-state-message">
+                                    <p>You haven't joined any clubs yet. <a onClick={handleClubsClick} style={{cursor: 'pointer', color: '#2074AC', textDecoration: 'underline'}}>Explore clubs now!</a></p>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -484,46 +490,52 @@ const MyActivity = () => {
                         <div className="activity-event-explore-title">My Events</div>
                         {error && <div className="error-text">{error}</div>}
                         <div className="activity-events-grid">
-                            {events.map((evt, idx) => (
-                                <motion.div
-                                    key={evt.id}
-                                    className="activity-event-card-wrapper"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, amount: 0.2 }}
-                                    transition={{ duration: 0.4 }}
-                                >
+                            {events.length > 0 ? (
+                                events.map((evt, idx) => (
                                     <motion.div
-                                        className="activity-event-card"
-                                        onClick={() => navigateToEvent(evt)}
-                                        style={{
-                                            '--hover-bg': evt.hoverBackground,
-                                            '--hover-shadow': evt.hoverColor
-                                        }}
-                                        whileHover={{
-                                            scale: 1.05,
-                                            background: evt.hoverBackground,
-                                            boxShadow: `0 0 25px ${evt.hoverColor}`
-                                        }}
+                                        key={evt.id}
+                                        className="activity-event-card-wrapper"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true, amount: 0.2 }}
                                         transition={{ duration: 0.4 }}
                                     >
-                                        <img
-                                            src={evt.imageUrl || '/default-event-banner.png'}
-                                            alt={evt.name}
-                                            className="activity-event-card-banner"
-                                            onError={e => { e.target.onerror = null; e.target.src = '/default-event-banner.png' }}
-                                        />
-                                        <div className="activity-event-card-content">
-                                            <div className="activity-event-card-name">{decodeHTMLEntities(evt.name)}</div>
-                                            <div className="activity-event-card-description">{decodeHTMLEntities(evt.description)}</div>
-                                            <div className="activity-spacer" />
-                                            <div className="activity-event-card-meta">
-                                                Date: {evt.date} | Time: {evt.time} | Place: {decodeHTMLEntities(evt.place)}
+                                        <motion.div
+                                            className="activity-event-card"
+                                            onClick={() => navigateToEvent(evt)}
+                                            style={{
+                                                '--hover-bg': evt.hoverBackground,
+                                                '--hover-shadow': evt.hoverColor
+                                            }}
+                                            whileHover={{
+                                                scale: 1.05,
+                                                background: evt.hoverBackground,
+                                                boxShadow: `0 0 25px ${evt.hoverColor}`
+                                            }}
+                                            transition={{ duration: 0.4 }}
+                                        >
+                                            <img
+                                                src={evt.imageUrl || '/default-event-banner.png'}
+                                                alt={evt.name}
+                                                className="activity-event-card-banner"
+                                                onError={e => { e.target.onerror = null; e.target.src = '/default-event-banner.png' }}
+                                            />
+                                            <div className="activity-event-card-content">
+                                                <div className="activity-event-card-name">{decodeHTMLEntities(evt.name)}</div>
+                                                <div className="activity-event-card-description">{decodeHTMLEntities(evt.description)}</div>
+                                                <div className="activity-spacer" />
+                                                <div className="activity-event-card-meta">
+                                                    Date: {evt.date} | Time: {evt.time} | Place: {decodeHTMLEntities(evt.place)}
+                                                </div>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     </motion.div>
-                                </motion.div>
-                            ))}
+                                ))
+                            ) : (
+                                <div className="empty-state-message">
+                                    <p>You haven't registered for any events yet. <a onClick={handleEventsClick} style={{cursor: 'pointer', color: '#2074AC', textDecoration: 'underline'}}>Find events to attend!</a></p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

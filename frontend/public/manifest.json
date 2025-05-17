@@ -1,11 +1,21 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Unihub+",
+  "name": "Unihub+",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/static/curtin-favicon.jpg",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/jpeg"
+    },
+        {
+      "src": "/static/curtin-favicon2.jpg",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/jpeg"
     },
     {
       "src": "logo192.png",
