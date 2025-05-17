@@ -38,7 +38,9 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Frontend origin
     "http://s3-deployment-ec2.s3-website-ap-southeast-1.amazonaws.com",  # Frontend S3 bucket URL
+    "http://curtinunihubplus.com",
 ]
+
 ALLOWED_HOSTS = [
     "localhost",  # Frontend local
     "127.0.0.1",  # Backend (change to 54.169.81.75:8000)
@@ -108,6 +110,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'api.middleware.InputValidationMiddleware',
 ]
+
 
 ROOT_URLCONF = "backend.urls"
 

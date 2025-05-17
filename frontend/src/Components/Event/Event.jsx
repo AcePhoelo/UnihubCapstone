@@ -586,15 +586,25 @@ const handleRemoveParticipant = async (participantId) => {
 const isEventPassed = () => {
   if (!event || !event.date) return false;
   
-  // Parse event date (format: YYYY-MM-DD)
-  const eventDate = new Date(event.date);
-  eventDate.setDate(eventDate.getDate() + 1); // Day after the event
+  // Parse event date using the more reliable method from hasEventPassed
+  const [year, month, day] = event.date.split('-').map(Number);
+  const eventDate = new Date(year, month - 1, day); // Month is 0-indexed in JS
+  
+  // Add 1 day to get "day after event"
+  const dayAfterEvent = new Date(eventDate);
+  dayAfterEvent.setDate(dayAfterEvent.getDate() + 1);
   
   // Get current date without time
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  return today >= eventDate;
+  // Debug information
+  console.log("Event date:", eventDate);
+  console.log("Day after event:", dayAfterEvent);
+  console.log("Today:", today);
+  console.log("Is feedback available:", today >= dayAfterEvent);
+  
+  return today >= dayAfterEvent;
 };
 
 const hasEventPassed = () => {
@@ -691,8 +701,12 @@ console.log("- Can edit event:", isEventCreator || isClubLeaderForEvent);
                 </div>
             </div>
 
-            <div className={`event-banner-wrapper ${isEditMode ? 'edit-mode' : ''}`} style={{ background: bgOverlay }}>
-                <div className="event-banner">
+            <div 
+                className={`event-banner-wrapper ${isEditMode ? 'edit-mode' : ''}`} 
+                style={{ 
+                    background: bgOverlay
+                }}
+            >      
                     {event.banner && (
                         <img
                             src={newBanner ? URL.createObjectURL(newBanner) : event.banner}
@@ -787,7 +801,6 @@ console.log("- Can edit event:", isEventCreator || isClubLeaderForEvent);
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
 
             <div className="event-description-container">

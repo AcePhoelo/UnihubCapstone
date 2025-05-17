@@ -334,6 +334,13 @@ const Club = () => {
                           profilePicUrl ? `http://54.169.81.75:8000${profilePicUrl}` : '');
     }, [club_id]);
 
+    useEffect(() => {
+    if (club) {
+        setEditedClubName(club.name || '');
+        setDescriptionText(club.description || '');
+    }
+    }, [club]);
+
     const joinClub = async () => {
         if (isGuest) {
             navigate('/error', {
@@ -529,24 +536,52 @@ const Club = () => {
         setBannerPreview(URL.createObjectURL(f));
     };
 
+// Replace the current handleSaveChanges function with this:
     const handleSaveChanges = async () => {
         const token = localStorage.getItem('access_token');
         const form = new FormData();
         form.append('name', editedClubName);
-        form.append('description', descriptionText);
+        form.append('description', descriptionText); // Always include current description
         if (newLogo) form.append('logo', newLogo);
         if (newBanner) form.append('banner', newBanner);
-        const resp = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/update/`, {
-            method: 'PUT',
-            headers: { Authorization: `Bearer ${token}` },
-            body: form
-        });
-        if (resp.ok) {
-            const upd = await resp.json();
-            setClub(upd.club);
-            setIsEditMode(false);
-            logoPreview && URL.revokeObjectURL(logoPreview);
-            bannerPreview && URL.revokeObjectURL(bannerPreview);
+        
+        try {
+            const resp = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/update/`, {
+                method: 'PUT',
+                headers: { Authorization: `Bearer ${token}` },
+                body: form
+            });
+            
+            if (resp.ok) {
+                const updData = await resp.json();
+                
+                // Check if updData has expected structure, otherwise use form values
+                const updatedClub = updData.club || updData || {};
+                
+                // Create a new club object that preserves ALL fields
+                setClub(prevClub => ({
+                    ...prevClub, // Keep all existing fields
+                    name: updatedClub.name || editedClubName || prevClub.name,
+                    description: updatedClub.description || descriptionText || prevClub.description,
+                    logo: updatedClub.logo || (newLogo ? URL.createObjectURL(newLogo) : prevClub.logo),
+                    banner: updatedClub.banner || (newBanner ? URL.createObjectURL(newBanner) : prevClub.banner),
+                    // Don't need to explicitly set these since we spread prevClub first
+                    // president, members, colors, etc. are already preserved
+                }));
+                
+                setIsEditMode(false);
+                
+                if (logoPreview) URL.revokeObjectURL(logoPreview);
+                if (bannerPreview) URL.revokeObjectURL(bannerPreview);
+                
+                // Update state variables to match new values
+                setEditedClubName(updatedClub.name || editedClubName);
+                setDescriptionText(updatedClub.description || descriptionText);
+                
+                success2("Club updated successfully!");
+            }
+        } catch (err) {
+            error2("Error saving club changes: " + err.message);
         }
     };
 
@@ -591,6 +626,8 @@ const Club = () => {
     if (loading) return <div>Loading...</div>;
     if (error) return <div className="error-text">{error}</div>;
     if (!club) return <div>Club not found.</div>;
+    
+
 
     return (
         <div className="club-page">
@@ -729,7 +766,14 @@ const Club = () => {
                                 ) : (
                                     <>
                                         {isClubPresident && (
-                                            <button className="club-banner-button edit-club-button" onClick={() => setIsEditMode(true)}>
+                                            <button 
+                                                className="club-banner-button edit-club-button" 
+                                                onClick={() => {
+                                                    setEditedClubName(club.name || '');
+                                                    setDescriptionText(club.description || '');
+                                                    setIsEditMode(true);
+                                                }}
+                                            >
                                                 Edit
                                             </button>
                                         )}
@@ -746,26 +790,51 @@ const Club = () => {
                         </div>
                         <div className="club-banner-right">
                             <div className="club-leader-info">
-                            <img
-                                    src={club.president?.profile_picture || '/default-profile.png'}
+                            {club.president?.profile_picture ? (
+                                <img
+                                    src={club.president.profile_picture}
                                     alt="Leader"
                                     className="leader-photo"
                                     style={{ cursor: 'pointer' }}
                                     onClick={() => navigateToProfile(club.president)}
-                                    onError={(e) => { e.target.onerror = null; e.target.src = '/default-profile.png'; 
-                                                const parent = e.target.parentElement;
-                                                const initialsEl = document.createElement('div');
-                                                initialsEl.className = "leader-photo";
-                                                initialsEl.style.display = "flex";
-                                                initialsEl.style.alignItems = "center";
-                                                initialsEl.style.justifyContent = "center";
-                                                initialsEl.style.backgroundColor = "#2074AC";
-                                                initialsEl.style.color = "white";
-                                                initialsEl.style.fontSize = "18px";
-                                                initialsEl.innerText = getInitials(club.president?.full_name || '');
-                                                parent.appendChild(initialsEl);
-                                            }} // Fallback for broken images
+                                    onError={(e) => {
+                                        e.target.style.display = "none"; // Hide the broken image
+                                        const parent = e.target.parentElement;
+                                        // Check if we already added an initials element to avoid duplicates
+                                        const existingInitials = parent.querySelector('.leader-initials');
+                                        if (!existingInitials) {
+                                            const initialsEl = document.createElement('div');
+                                            initialsEl.className = "leader-photo leader-initials";
+                                            initialsEl.style.display = "flex";
+                                            initialsEl.style.alignItems = "center";
+                                            initialsEl.style.justifyContent = "center";
+                                            initialsEl.style.backgroundColor = "#2074AC";
+                                            initialsEl.style.color = "white";
+                                            initialsEl.style.fontSize = "18px";
+                                            initialsEl.style.cursor = "pointer";
+                                            initialsEl.innerText = getInitials(club.president?.full_name || '');
+                                            initialsEl.onclick = () => navigateToProfile(club.president);
+                                            parent.appendChild(initialsEl);
+                                        }
+                                    }}
                                 />
+                            ) : (
+                                <div 
+                                    className="leader-photo"
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        backgroundColor: "#2074AC",
+                                        color: "white",
+                                        fontSize: "18px",
+                                        cursor: "pointer"
+                                    }}
+                                    onClick={() => navigateToProfile(club.president)}
+                                >
+                                    {getInitials(club.president?.full_name || '')}
+                                </div>
+                            )}
                                 <div className="club-leader-name">
                                     {(club.president?.full_name || 'No Leader').split(' ').map((n, i) =>
                                         i === 0 ? (

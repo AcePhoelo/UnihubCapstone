@@ -271,8 +271,8 @@ const EventDirectory = () => {
             <div
                 className={`event-body fade ${!loading ? 'visible' : ''}`}
                 style={{
-                    backgroundImage: current.hoverColor
-                        ? `linear-gradient(to bottom, ${current.hoverColor} 0%, rgba(250,250,250,0) 50%)`
+                    backgroundImage: current?.dominant_color 
+                        ? `linear-gradient(to bottom, rgb(${current.dominant_color.join(',')}) 0%, rgba(250,250,250,0) 50%)`
                         : undefined,
                 }}
             >
@@ -302,8 +302,12 @@ const EventDirectory = () => {
                             whileHover={{ scale: 1.03 }}
                             style={{
                                 cursor: 'pointer',
-                                '--hover-bg': pinnedEvents[featuredIndex].hoverBackground,
-                                '--hover-shadow': pinnedEvents[featuredIndex].hoverColor,
+                                // Apply the gradient directly as a background instead of using CSS variables
+                                background: pinnedEvents[featuredIndex].hoverBackground,
+                                // You might also want a box-shadow using the hover color
+                                boxShadow: pinnedEvents[featuredIndex].hoverColor ? 
+                                    `0 8px 16px rgba(${pinnedEvents[featuredIndex].dominant_color?.join(',')}, 0.3)` : 
+                                    'none'
                             }}
                             onClick={() =>
                                 navigate(
