@@ -33,7 +33,11 @@ DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 # Use the same host for the frontend for simplicity (we choose localhost here)
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-    "http://s3-deployment-ec2.s3-website-ap-southeast-1.amazonaws.com",  # Frontend S3 bucket URL
+    "http://s3-deployment-ec2.s3-website-ap-southeast-1.amazonaws.com",
+    "https://curtinunihubplus.com",  # Add HTTPS version
+    "https://www.curtinunihubplus.com",  # Add HTTPS version
+    "http://curtinunihubplus.com",
+    "http://www.curtinunihubplus.com"
 ]
 
 CORS_ALLOWED_ORIGINS = [
