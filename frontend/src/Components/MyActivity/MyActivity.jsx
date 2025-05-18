@@ -58,7 +58,7 @@ const MyActivity = () => {
     
             if (!profile || !profile.studentid) {
                 try {
-                    const response = await fetch('http://54.169.81.75:8000/profile/profile/', {
+                    const response = await fetch('https://54.169.81.75:8000/profile/profile/', {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -87,7 +87,7 @@ const MyActivity = () => {
 
             const profilePicUrl = profile.profile_picture || '';
             setProfilePicture(profilePicUrl.startsWith('http') ? profilePicUrl : 
-            profilePicUrl ? `http://54.169.81.75:8000${profilePicUrl}` : '');
+            profilePicUrl ? `https://54.169.81.75:8000${profilePicUrl}` : '');
         };
     
         fetchProfileIfNeeded();
@@ -107,7 +107,7 @@ const MyActivity = () => {
             // Fetch profile if it's missing or incomplete
             if (!profile || !profile.studentid) {
                 try {
-                    const response = await fetch('http://54.169.81.75:8000/profile/profile/', {
+                    const response = await fetch('https://54.169.81.75:8000/profile/profile/', {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -135,12 +135,12 @@ const MyActivity = () => {
             setStudentID(profile.studentid || "Unknown ID");
             const profilePicUrl = profile.profile_picture || '';
             setProfilePicture(profilePicUrl.startsWith('http') ? profilePicUrl : 
-            profilePicUrl ? `http://54.169.81.75:8000${profilePicUrl}` : '');
+            profilePicUrl ? `https://54.169.81.75:8000${profilePicUrl}` : '');
     
             // Fetch user activity
             const fetchUserActivity = async () => {
                 try {
-                    const clubsResponse = await fetch(`http://54.169.81.75:8000/profile/students/${profile.studentid}`, {
+                    const clubsResponse = await fetch(`https://54.169.81.75:8000/profile/students/${profile.studentid}`, {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ const MyActivity = () => {
                         // Handle token refresh
                         const refreshToken = localStorage.getItem('refresh_token');
                         if (refreshToken) {
-                            const refreshResponse = await fetch('http://54.169.81.75:8000/api/token/refresh/', {
+                            const refreshResponse = await fetch('https://54.169.81.75:8000/api/token/refresh/', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ const MyActivity = () => {
                                 localStorage.setItem('access_token', tokenData.access);
     
                                 // Retry the original request with the new token
-                                const newResponse = await fetch(`http://54.169.81.75:8000/profile/students/${profile.studentid}`, {
+                                const newResponse = await fetch(`https://54.169.81.75:8000/profile/students/${profile.studentid}`, {
                                     headers: {
                                         'Authorization': `Bearer ${tokenData.access}`,
                                         'Content-Type': 'application/json',
@@ -215,10 +215,10 @@ const MyActivity = () => {
                         name: decodeHTMLEntities(club.name || "Unknown Club"),
                         description: decodeHTMLEntities(club.description || "Club Leader"),
                         // Fix banner URLs with complete paths
-                        logo: club.logo ? (club.logo.startsWith('http') ? club.logo : `http://54.169.81.75:8000${club.logo}`) : null,
-                        banner: club.banner ? (club.banner.startsWith('http') ? club.banner : `http://54.169.81.75:8000${club.banner}`) : null,
-                        imageUrl: club.banner ? (club.banner.startsWith('http') ? club.banner : `http://54.169.81.75:8000${club.banner}`) : null,
-                        logoUrl: club.logo ? (club.logo.startsWith('http') ? club.logo : `http://54.169.81.75:8000${club.logo}`) : null
+                        logo: club.logo ? (club.logo.startsWith('http') ? club.logo : `https://54.169.81.75:8000${club.logo}`) : null,
+                        banner: club.banner ? (club.banner.startsWith('http') ? club.banner : `https://54.169.81.75:8000${club.banner}`) : null,
+                        imageUrl: club.banner ? (club.banner.startsWith('http') ? club.banner : `https://54.169.81.75:8000${club.banner}`) : null,
+                        logoUrl: club.logo ? (club.logo.startsWith('http') ? club.logo : `https://54.169.81.75:8000${club.logo}`) : null
                     }))
                     : [];
                 
@@ -233,8 +233,8 @@ const MyActivity = () => {
                             id: club.id || "",
                             name: decodeHTMLEntities(club.name || "Unknown Club"), 
                             description: decodeHTMLEntities(club.description || ""),
-                            imageUrl: club.banner ? (club.banner.startsWith('http') ? club.banner : `http://54.169.81.75:8000${club.banner}`) : null,
-                            logoUrl: club.logo ? (club.logo.startsWith('http') ? club.logo : `http://54.169.81.75:8000${club.logo}`) : null,
+                            imageUrl: club.banner ? (club.banner.startsWith('http') ? club.banner : `https://54.169.81.75:8000${club.banner}`) : null,
+                            logoUrl: club.logo ? (club.logo.startsWith('http') ? club.logo : `https://54.169.81.75:8000${club.logo}`) : null,
                         }))
                     : [];
 
@@ -260,7 +260,7 @@ const MyActivity = () => {
                 
                 // Step 1: Use the existing EventRegistrationListView endpoint with user_id parameter
                 const registrationsResponse = await fetch(
-                    `http://54.169.81.75:8000/api/event/event_registration/?user_id=${profile.studentid}`, 
+                    `https://54.169.81.75:8000/api/event/event_registration/?user_id=${profile.studentid}`, 
                     {
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -285,7 +285,7 @@ const MyActivity = () => {
 
                         let imageUrl = event.banner || null;
                     if (imageUrl && !imageUrl.startsWith('http')) {
-                        imageUrl = `http://54.169.81.75:8000${imageUrl}`;
+                        imageUrl = `https://54.169.81.75:8000${imageUrl}`;
                     }
                         return {
                             id: event.id,

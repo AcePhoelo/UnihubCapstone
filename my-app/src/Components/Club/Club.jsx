@@ -114,7 +114,7 @@ const Club = () => {
         try {
             const token = localStorage.getItem('access_token');
             
-            const response = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/`, {
+            const response = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -187,7 +187,7 @@ const Club = () => {
         const fetchClubEvents = async () => {
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch(`http://54.169.81.75:8000/api/event/add_event/?club_id=${club_id}`, {
+                const response = await fetch(`https://54.169.81.75:8000/api/event/add_event/?club_id=${club_id}`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -226,7 +226,7 @@ const Club = () => {
             const token = localStorage.getItem('access_token');
             
             // Fetch members
-            const membersResponse = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/members/`, {
+            const membersResponse = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/members/`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -258,7 +258,7 @@ const Club = () => {
             }
             
             // Fetch roles (including custom ones)
-            const rolesResponse = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/roles/`, {
+            const rolesResponse = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/roles/`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -298,7 +298,7 @@ const Club = () => {
                 joinButton.textContent = 'Joining...';
             }
 
-            const response = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/members/add/`, {
+            const response = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/members/add/`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -362,7 +362,7 @@ const Club = () => {
                 leaveButton.textContent = 'Leaving...';
             }
 
-            const response = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/members/${profile.studentid}/remove/`, {
+            const response = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/members/${profile.studentid}/remove/`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -422,7 +422,7 @@ const Club = () => {
                 formData.append('banner', newBanner);
             }
             
-            const response = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/update/`, {
+            const response = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/update/`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -474,7 +474,7 @@ const Club = () => {
         try {
             const token = localStorage.getItem('access_token');
             
-            const response = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/delete/`, {
+            const response = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/delete/`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -515,7 +515,7 @@ const Club = () => {
         try {
             const token = localStorage.getItem('access_token');
             
-            const response = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/update/`, {
+            const response = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/update/`, {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${token}`,

@@ -28,7 +28,7 @@ const ClubDirectory = () => {
         const fetchClubs = async () => {
             try {
                 const token = localStorage.getItem('access_token'); // Retrieve the token from localStorage
-                const response = await fetch('http://54.169.81.75:8000/clubs/', {
+                const response = await fetch('https://54.169.81.75:8000/clubs/', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`, // Include the token in the Authorization header
@@ -162,7 +162,7 @@ const ClubDirectory = () => {
                                     onClick={() => navigate(`/club/${club.id}`)}
                                 >
                                     <img
-                                        src={`http://54.169.81.75:8000${club.banner}`}
+                                        src={`https://54.169.81.75:8000${club.banner}`}
                                         alt={club.name}
                                         className="featured-club-image"
                                     />
@@ -192,7 +192,7 @@ const ClubDirectory = () => {
                                 <div className="club-card">
                                     {club.banner ? (
                                         <img
-                                            src={`http://54.169.81.75:8000${club.banner}`}
+                                            src={`https://54.169.81.75:8000${club.banner}`}
                                             alt={club.name}
                                             className="club-card-banner"
                                         />

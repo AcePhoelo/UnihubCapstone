@@ -34,7 +34,7 @@ export const checkAndRefreshToken = async () => {
     
     // Only refresh if token is expired or about to expire
     if (decoded.exp - currentTime < 300) { // 5 minutes buffer
-      const response = await fetch('http://54.169.81.75:8000/api/token/refresh/', {
+      const response = await fetch('https://54.169.81.75:8000/api/token/refresh/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh: refreshToken }),

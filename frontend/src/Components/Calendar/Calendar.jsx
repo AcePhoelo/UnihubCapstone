@@ -69,14 +69,14 @@ const Calendar = () => {
         
         setStudentName(currentUserData.full_name || currentUserData.name || '');
         setCurrentUserProfilePic(profilePicUrl.startsWith('http') ? profilePicUrl : 
-                                profilePicUrl ? `http://54.169.81.75:8000${profilePicUrl}` : '');
+                                profilePicUrl ? `https://54.169.81.75:8000${profilePicUrl}` : '');
     }, []);
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch('http://54.169.81.75:8000/api/event/add_event/', {
+                const response = await fetch('https://54.169.81.75:8000/api/event/add_event/', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,

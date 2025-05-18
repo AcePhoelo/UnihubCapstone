@@ -71,7 +71,7 @@ const Event = () => {
         formData.append('location', draftLocation);
 
         const res = await fetch(
-            `http://54.169.81.75:8000/api/event/add_event/${event.id}/`,
+            `https://54.169.81.75:8000/api/event/add_event/${event.id}/`,
             {
                 method: 'PATCH',
                 headers: { Authorization: `Bearer ${token}` },
@@ -113,7 +113,7 @@ const Event = () => {
         formData.append('description', draftDescription);
 
         const res = await fetch(
-            `http://54.169.81.75:8000/api/event/add_event/${event.id}/`,
+            `https://54.169.81.75:8000/api/event/add_event/${event.id}/`,
             {
                 method: 'PATCH',
                 headers: { Authorization: `Bearer ${token}` },
@@ -141,7 +141,7 @@ const Event = () => {
                 headers.Authorization = `Bearer ${token}`;
             }
             
-            const response = await fetch(`http://54.169.81.75:8000/api/event/event_registration/${event.id}/participants/`, {
+            const response = await fetch(`https://54.169.81.75:8000/api/event/event_registration/${event.id}/participants/`, {
                 method: 'GET',
                 headers: headers,
             });
@@ -204,7 +204,7 @@ const Event = () => {
             
             setStudentName(currentUserData.full_name || currentUserData.name || 'Unknown Student');
             setProfilePicture(profilePicUrl.startsWith('http') ? profilePicUrl : 
-                             profilePicUrl ? `http://54.169.81.75:8000${profilePicUrl}` : '');
+                             profilePicUrl ? `https://54.169.81.75:8000${profilePicUrl}` : '');
         }
     }, [isGuest]);
 
@@ -228,7 +228,7 @@ const Event = () => {
                 console.log("Current user studentID:", currentStudentID);
                 
                 // First get the event details
-                const response = await fetch(`http://54.169.81.75:8000/api/event/add_event/`, {
+                const response = await fetch(`https://54.169.81.75:8000/api/event/add_event/`, {
                     method: 'GET',
                     headers: {
                         'Authorization': token ? `Bearer ${token}` : '',
@@ -270,7 +270,7 @@ const Event = () => {
                     if (!isGuest && event.club) {
                         try {
                             console.log("Fetching club data for club ID:", event.club);
-                            const clubResponse = await fetch(`http://54.169.81.75:8000/clubs/clubs/${event.club}/`, {
+                            const clubResponse = await fetch(`https://54.169.81.75:8000/clubs/clubs/${event.club}/`, {
                                 headers: {
                                     'Authorization': token ? `Bearer ${token}` : '',
                                     'Content-Type': 'application/json',
@@ -354,7 +354,7 @@ useEffect(() => {
                         console.log("Checking registration with student ID:", studentID);
                         
                         const response = await fetch(
-                            `http://54.169.81.75:8000/api/event/event_registration/${event.id}/participants/`,
+                            `https://54.169.81.75:8000/api/event/event_registration/${event.id}/participants/`,
                             {
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
@@ -410,7 +410,7 @@ useEffect(() => {
             try {
                 const token = localStorage.getItem('access_token');
                 
-                const response = await fetch(`http://54.169.81.75:8000/api/event/add_event/${event.id}/`, {
+                const response = await fetch(`https://54.169.81.75:8000/api/event/add_event/${event.id}/`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -451,7 +451,7 @@ useEffect(() => {
                     return;
                 }
                 
-                const response = await fetch(`http://54.169.81.75:8000/api/event/event_registration/delete/${userRegistration.id}/`, {
+                const response = await fetch(`https://54.169.81.75:8000/api/event/event_registration/delete/${userRegistration.id}/`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -514,7 +514,7 @@ useEffect(() => {
                 formData.append('banner', newBanner);
             }
             
-            const response = await fetch(`http://54.169.81.75:8000/api/event/add_event/${event.id}/`, {
+            const response = await fetch(`https://54.169.81.75:8000/api/event/add_event/${event.id}/`, {
                 method: 'PATCH', // Use PATCH instead of PUT for partial updates
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -570,7 +570,7 @@ const handleRemoveParticipant = async (participantId) => {
     
     try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch(`http://54.169.81.75:8000/api/event/event_registration/delete/${participantId}/`, {
+        const response = await fetch(`https://54.169.81.75:8000/api/event/event_registration/delete/${participantId}/`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,

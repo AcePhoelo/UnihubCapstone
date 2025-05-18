@@ -22,7 +22,7 @@ const RegisterEvent = () => {
         const fetchEventDetails = async () => {
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch(`http://54.169.81.75:8000/api/event/add_event/`, {
+                const response = await fetch(`https://54.169.81.75:8000/api/event/add_event/`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -64,7 +64,7 @@ const RegisterEvent = () => {
         try {
             const token = localStorage.getItem('access_token');
             
-            const response = await fetch('http://54.169.81.75:8000/api/event/event_registration/register/', {
+            const response = await fetch('https://54.169.81.75:8000/api/event/event_registration/register/', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

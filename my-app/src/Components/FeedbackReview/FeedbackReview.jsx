@@ -18,7 +18,7 @@ const FeedbackReview = () => {
             try {
                 const token = localStorage.getItem('access_token');
                 const response = await fetch(
-                    `http://54.169.81.75:8000/api/feedback/feedback/?event_name=${encodeURIComponent(decodedEventName)}`,
+                    `https://54.169.81.75:8000/api/feedback/feedback/?event_name=${encodeURIComponent(decodedEventName)}`,
                     {
                         headers: {
                             'Authorization': `Bearer ${token}`

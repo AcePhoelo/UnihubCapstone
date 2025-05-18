@@ -49,7 +49,7 @@ const Event = () => {
     const fetchEventParticipants = async () => {
         try {
             const token = localStorage.getItem('access_token');
-            const response = await fetch(`http://54.169.81.75:8000/api/event/event_registration/${event.id}/participants/`, {
+            const response = await fetch(`https://54.169.81.75:8000/api/event/event_registration/${event.id}/participants/`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -131,7 +131,7 @@ const Event = () => {
                 const studentID = localStorage.getItem('student_id');
                 
                 // Fetch event details
-                const response = await fetch(`http://54.169.81.75:8000/api/event/add_event/`, {
+                const response = await fetch(`https://54.169.81.75:8000/api/event/add_event/`, {
                     method: 'GET',
                     headers: {
                         'Authorization': token ? `Bearer ${token}` : '',
@@ -165,7 +165,7 @@ const Event = () => {
                     if (!isGuest && studentID) {
                         try {
                             const participantsResponse = await fetch(
-                                `http://54.169.81.75:8000/api/event/event_registration/${event.id}/participants/`,
+                                `https://54.169.81.75:8000/api/event/event_registration/${event.id}/participants/`,
                                 {
                                     headers: {
                                         'Authorization': `Bearer ${token}`,
@@ -221,7 +221,7 @@ useEffect(() => {
                         console.log("Checking registration with student ID:", studentID);
                         
                         const response = await fetch(
-                            `http://54.169.81.75:8000/api/event/event_registration/${event.id}/participants/`,
+                            `https://54.169.81.75:8000/api/event/event_registration/${event.id}/participants/`,
                             {
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
@@ -269,7 +269,7 @@ useEffect(() => {
         try {
             const token = localStorage.getItem('access_token');
             
-            const response = await fetch(`http://54.169.81.75:8000/api/event/delete_event/${event.id}/`, {
+            const response = await fetch(`https://54.169.81.75:8000/api/event/delete_event/${event.id}/`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -311,7 +311,7 @@ useEffect(() => {
                 return;
             }
             
-            const response = await fetch(`http://54.169.81.75:8000/api/event/event_registration/delete/${userRegistration.id}/`, {
+            const response = await fetch(`https://54.169.81.75:8000/api/event/event_registration/delete/${userRegistration.id}/`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -371,7 +371,7 @@ useEffect(() => {
                 formData.append('banner', newBanner);
             }
             
-            const response = await fetch(`http://54.169.81.75:8000/api/event/add_event/${event.id}/`, {
+            const response = await fetch(`https://54.169.81.75:8000/api/event/add_event/${event.id}/`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -407,7 +407,7 @@ useEffect(() => {
         
         try {
             const token = localStorage.getItem('access_token');
-            const response = await fetch(`http://54.169.81.75:8000/api/event/event_registration/delete/${participantId}/`, {
+            const response = await fetch(`https://54.169.81.75:8000/api/event/event_registration/delete/${participantId}/`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,

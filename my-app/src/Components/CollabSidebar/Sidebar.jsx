@@ -19,7 +19,7 @@ const Sidebar = ({ isOpen, onClose, presidentEmail }) => {
       const token = localStorage.getItem('access_token'); // Retrieve the token from localStorage
 
       // Fetch the list of clubs when the sidebar is opened
-      fetch('http://54.169.81.75:8000/clubs/list', {
+      fetch('https://54.169.81.75:8000/clubs/list', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
@@ -54,7 +54,7 @@ const Sidebar = ({ isOpen, onClose, presidentEmail }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://54.169.81.75:8000/collaboration/send-email/', {
+      const response = await fetch('https://54.169.81.75:8000/collaboration/send-email/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

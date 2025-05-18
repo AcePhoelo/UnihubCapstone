@@ -1,7 +1,7 @@
 import requests
 
 # Step 1: Obtain a token
-token_response = requests.post("http://54.169.81.75:8000/api/token/", data={
+token_response = requests.post("https://54.169.81.75:8000/api/token/", data={
     "username": "21449723",
     "password": "Unihub+Capstone"
 })

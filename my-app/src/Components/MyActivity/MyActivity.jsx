@@ -69,7 +69,7 @@ const MyActivity = () => {
         const fetchUserActivity = async () => {
             try {
                 // Fetch user's clubs (memberships)
-                const clubsResponse = await fetch(`http://54.169.81.75:8000/profile/students/${profile.studentid}`, {
+                const clubsResponse = await fetch(`https://54.169.81.75:8000/profile/students/${profile.studentid}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
@@ -106,8 +106,8 @@ const MyActivity = () => {
                         id: club.id || "",
                         name: club.name || club,  // Handle both object and string formats
                         description: club.description || "",
-                        imageUrl: club.banner ? `http://54.169.81.75:8000${club.banner}` : null,
-                        logoUrl: club.logo ? `http://54.169.81.75:8000${club.logo}` : null
+                        imageUrl: club.banner ? `https://54.169.81.75:8000${club.banner}` : null,
+                        logoUrl: club.logo ? `https://54.169.81.75:8000${club.logo}` : null
                     }))
                     : [];
                     
@@ -120,8 +120,8 @@ const MyActivity = () => {
                                 id: club.id || "",
                                 name: club.name || "",
                                 description: club.description || "Club Leader",
-                                imageUrl: club.banner ? `http://54.169.81.75:8000${club.banner}` : null,
-                                logoUrl: club.logo ? `http://54.169.81.75:8000${club.logo}` : null,
+                                imageUrl: club.banner ? `https://54.169.81.75:8000${club.banner}` : null,
+                                logoUrl: club.logo ? `https://54.169.81.75:8000${club.logo}` : null,
                                 role: "Leader"
                             };
                         } 
@@ -141,7 +141,7 @@ const MyActivity = () => {
                 
                 // Fetch user's event registrations - using try/catch for better error handling
                 try {
-                    const eventsResponse = await fetch(`http://54.169.81.75:8000/api/event/event_registration/?user_id=${profile.user_id || profile.id}&student_name=${encodeURIComponent(profile.full_name || '')}`, {
+                    const eventsResponse = await fetch(`https://54.169.81.75:8000/api/event/event_registration/?user_id=${profile.user_id || profile.id}&student_name=${encodeURIComponent(profile.full_name || '')}`, {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json',
@@ -165,7 +165,7 @@ const MyActivity = () => {
                     const uniqueEventIds = [...new Set(registeredEventIds)];
                     
                     // Fetch details for all events
-                    const allEventsResponse = await fetch(`http://54.169.81.75:8000/api/event/add_event/`, {
+                    const allEventsResponse = await fetch(`https://54.169.81.75:8000/api/event/add_event/`, {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json',

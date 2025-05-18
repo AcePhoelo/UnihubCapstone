@@ -39,7 +39,7 @@ const CreationClub = () => {
         });
     
         try {
-            const response = await fetch('http://54.169.81.75:8000/clubs/clubs/create/', {
+            const response = await fetch('https://54.169.81.75:8000/clubs/clubs/create/', {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`,
