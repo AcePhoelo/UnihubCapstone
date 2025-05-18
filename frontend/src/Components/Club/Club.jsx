@@ -126,6 +126,22 @@ const Club = () => {
         return initials;
     };
 
+    // Add this effect to your Club.jsx component
+    useEffect(() => {
+    // Refresh members data when returning from the manage roles page
+    const handleFocus = () => {
+        if (club_id) {
+        console.log("Window focused - refreshing members data");
+        fetchClubMembers();
+        }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => {
+        window.removeEventListener('focus', handleFocus);
+    };
+    }, [club_id]);
+
     const fetchClubDetails = async () => {
         setLoading(true);
         try {
@@ -208,115 +224,88 @@ const Club = () => {
     };
 
 
-    const fetchClubMembers = async () => {
-        try {
-            const token = localStorage.getItem('access_token');
-            const isGuest = localStorage.getItem('isGuest') === 'true';
+const fetchClubMembers = async () => {
+    try {
+        const token = localStorage.getItem('access_token');
+        const isGuest = localStorage.getItem('isGuest') === 'true';
 
-            const headers = { 'Content-Type': 'application/json' };
-            if (!isGuest && token) headers.Authorization = `Bearer ${token}`;
+        const headers = { 'Content-Type': 'application/json' };
+        if (!isGuest && token) headers.Authorization = `Bearer ${token}`;
 
-            // First fetch the club roles to ensure we have all possible roles
-            let allRoles = ['President', 'Member']; // Default roles that should always be present
+        // Add debugging to see what's happening
+        console.log("Fetching members for club:", club_id);
+        
+        const mResp = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/members/`, { headers });
+        
+        if (mResp.ok) {
+            const md = await mResp.json();
+            console.log("Raw members data:", md);
             
-            try {
-                const rResp = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/roles/`, { headers });
-                if (rResp.ok) {
-                    const rd = await rResp.json();
-                    if (rd.roles && rd.roles.length > 0) {
-                        // Extract all role names, ensuring to keep President and Member
-                        const roleNames = rd.roles.map(r => r.name);
-                        allRoles = Array.from(new Set([...allRoles, ...roleNames]));
-                        
-                        // Update clubRoles state with complete role information
-                        setClubRoles(rd.roles.map(role => ({
-                            id: role.id || role.name,
-                            name: role.name
-                        })));
-                    }
-                }
-            } catch (roleErr) {
-                console.error('Error fetching roles:', roleErr);
-            }
-            
-            // Then fetch members data
-            const mResp = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/members/`, { headers });
-            
-            if (mResp.ok) {
-                const md = await mResp.json();
-                console.log("Raw members data:", md);
+            // Process each member and normalize their role information
+            let membersList = (md.results || []).map(m => {
+                // Extract from nested structure if needed
+                const student = m.student || m;
                 
-                // Enhanced member transformation to ensure we capture all required fields
-                let membersList = (md.results || []).map(m => ({
-                    id: m.id || m.student?.id || '',
-                    full_name: decodeHTMLEntities(m.student?.full_name || m.full_name || 'Unknown'),
-                    studentid: m.student?.studentid || m.studentid || 'No ID',
+                // Debug each member's role data
+                console.log(`Member ${student.full_name || m.full_name}: Position=${m.position}, Custom=${m.custom_position}`);
+                
+                return {
+                    id: m.id || student.id || '',
+                    full_name: decodeHTMLEntities(student.full_name || m.full_name || 'Unknown'),
+                    studentid: student.studentid || m.studentid || 'No ID',
                     position: m.position || 'Member',
                     custom_position: m.custom_position || '',
-                    profile_picture: m.student?.profile_picture || m.profile_picture || null
-                }));
-                
-                // Make sure president is included in the members list if not already there
-                if (club?.president && !membersList.some(m => 
-                    m.studentid === club.president.studentid && m.position === 'President')) {
-                    membersList.push({
-                        id: club.president.id || '',
-                        full_name: decodeHTMLEntities(club.president.full_name || 'Unknown'),
-                        studentid: club.president.studentid || 'No ID',
-                        position: 'President',
-                        custom_position: '',
-                        profile_picture: club.president.profile_picture || null
-                    });
-                }
-                
-                console.log("Transformed members list with president:", membersList);
-                setMembers(membersList);
-                
-                // Create a set of all roles that have members
-                const activeRoles = new Set(['President', 'Member']);
-                membersList.forEach(m => {
-                    if (m.custom_position) activeRoles.add(m.custom_position);
-                    else if (m.position) activeRoles.add(m.position);
+                    profile_picture: student.profile_picture || m.profile_picture || null
+                };
+            });
+            
+            // Make sure president is included in the members list if not already there
+            if (club?.president && !membersList.some(m => 
+                m.studentid === club.president.studentid && m.position === 'President')) {
+                membersList.push({
+                    id: club.president.id || '',
+                    full_name: decodeHTMLEntities(club.president.full_name || 'Unknown'),
+                    studentid: club.president.studentid || 'No ID',
+                    position: 'President',
+                    custom_position: '',
+                    profile_picture: club.president.profile_picture || null
                 });
-                
-                // Make sure we include all roles from the backend
-                allRoles.forEach(role => activeRoles.add(role));
-                
-                // Only display roles that are in our clubRoles state or default roles
-                const finalRoles = Array.from(activeRoles).sort((a, b) => {
-                    // President is always first
-                    if (a === 'President') return -1;
-                    if (b === 'President') return 1;
-                    // Member is always last
-                    if (a === 'Member') return 1;
-                    if (b === 'Member') return -1;
-                    // Other roles alphabetically
-                    return a.localeCompare(b);
-                });
-                
-                if (clubRoles.length === 0) {
-                    // If we don't have clubRoles yet (from the roles API), create them
-                    setClubRoles(finalRoles.map(role => ({
-                        id: role,
-                        name: role
-                    })));
-                } else {
-                    // Ensure all active roles are in clubRoles
-                    const currentRoleNames = clubRoles.map(r => r.name);
-                    const missingRoles = finalRoles.filter(role => !currentRoleNames.includes(role));
-                    
-                    if (missingRoles.length > 0) {
-                        setClubRoles([
-                            ...clubRoles,
-                            ...missingRoles.map(role => ({ id: role, name: role }))
-                        ]);
-                    }
-                }
             }
-        } catch (err) {
-            console.error('Error fetching members/roles:', err);
+            
+            console.log("Transformed members list with president:", membersList);
+            setMembers(membersList);
+            
+            // Create a set of all roles that have members, including position and custom_position
+            const activeRoles = new Set(['President', 'Member']);
+            membersList.forEach(m => {
+                if (m.position) activeRoles.add(m.position);
+                if (m.custom_position) activeRoles.add(m.custom_position);
+            });
+            
+            // Ensure we have default standard roles in clubRoles
+            const standardRoles = ['President', 'Vice President', 'Secretary', 'Treasurer', 'Head of Department', 'Executive Committee', 'Member'];
+            const updatedRoles = [...standardRoles, ...Array.from(activeRoles)].map(role => ({
+                id: role,
+                name: role
+            }));
+            
+            // Remove duplicates
+            const uniqueRoles = [];
+            const roleNames = new Set();
+            updatedRoles.forEach(role => {
+                if (!roleNames.has(role.name)) {
+                    roleNames.add(role.name);
+                    uniqueRoles.push(role);
+                }
+            });
+            
+            console.log("Updated clubRoles:", uniqueRoles);
+            setClubRoles(uniqueRoles);
         }
-    };
+    } catch (err) {
+        console.error('Error fetching members:', err);
+    }
+};
 
 
     useEffect(() => { fetchClubDetails(); }, [club_id]);
@@ -748,36 +737,55 @@ const Club = () => {
                                 <h1 className="club-page-name">{decodeHTMLEntities(club.name)}</h1>
                             )}
                             <div className="club-banner-buttons">
-                                {!isGuest ? (
+                                {isEditMode ? (
                                     <>
-                                        {isClubPresident && (
-                                            <button 
-                                                className="club-banner-button edit-club-button" 
-                                                onClick={() => {
-                                                    setEditedClubName(club.name || '');
-                                                    setDescriptionText(club.description || '');
-                                                    setIsEditMode(true);
-                                                }}
-                                            >
-                                                Edit
-                                            </button>
-                                        )}
+                                        <button className="club-banner-button save-edit" onClick={handleSaveChanges}>
+                                            Save
+                                        </button>
+                                        <button className="club-banner-button cancel-edit" onClick={handleCancelEdit}>
+                                            Cancel
+                                        </button>
                                         <button
-                                            className="club-banner-button join-button"
-                                            onClick={isUserMember ? leaveClub : joinClub}
-                                            style={{ background: isUserMember ? '#CF2424' : '#2074AC' }}
+                                            className="club-banner-button change-club-banner-button"
+                                            onClick={() => bannerInputRef.current.click()}
                                         >
-                                            {isUserMember ? 'Leave' : 'Join'}
+                                            Change Banner
                                         </button>
                                     </>
                                 ) : (
-                                    <button
-                                        className="club-banner-button join-button"
-                                        onClick={joinClub}
-                                        style={{ background: '#2074AC' }}
-                                    >
-                                        Join
-                                    </button>
+                                    <>
+                                        {!isGuest ? (
+                                            <>
+                                                {isClubPresident && (
+                                                    <button 
+                                                        className="club-banner-button edit-club-button" 
+                                                        onClick={() => {
+                                                            setEditedClubName(club.name || '');
+                                                            setDescriptionText(club.description || '');
+                                                            setIsEditMode(true);
+                                                        }}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                )}
+                                                <button
+                                                    className="club-banner-button join-button"
+                                                    onClick={isUserMember ? leaveClub : joinClub}
+                                                    style={{ background: isUserMember ? '#CF2424' : '#2074AC' }}
+                                                >
+                                                    {isUserMember ? 'Leave' : 'Join'}
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <button
+                                                className="club-banner-button join-button"
+                                                onClick={joinClub}
+                                                style={{ background: '#2074AC' }}
+                                            >
+                                                Join
+                                            </button>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -1034,19 +1042,29 @@ const Club = () => {
                                                 // Others alphabetically
                                                 return a.name.localeCompare(b.name);
                                             })
-                                            .map(role => (
-                                                <MemberCategorySection
-                                                    key={role.id}
-                                                    title={role.name}
-                                                    members={members.filter(m => 
-                                                        m.position === role.name || 
-                                                        m.custom_position === role.name
-                                                    )}
-                                                    searchQuery={searchQuery}
-                                                    getInitials={getInitials}
-                                                />
-                                            ))
-                                        }
+                                                .map(role => {
+                                                    // Case-insensitive comparison for roles
+                                                    const roleNameLower = role.name.toLowerCase();
+                                                    const roleMembers = members.filter(m => 
+                                                        (m.position && m.position.toLowerCase() === roleNameLower) || 
+                                                        (m.custom_position && m.custom_position.toLowerCase() === roleNameLower)
+                                                    );
+                                                    
+                                                    // Add debug console output to see what's happening
+                                                    console.log(`Role: ${role.name}, Members found: ${roleMembers.length}`);
+                                                    
+                                                    // Only render if there are members with this role
+                                                    return roleMembers.length > 0 ? (
+                                                        <MemberCategorySection
+                                                            key={role.id}
+                                                            title={role.name}
+                                                            members={roleMembers}
+                                                            searchQuery={searchQuery}
+                                                            getInitials={getInitials}
+                                                        />
+                                                    ) : null;
+                                                }).filter(Boolean) // Remove null sections
+                                            }
                                         
                                         {/* No results message */}
                                         {members.filter(m =>

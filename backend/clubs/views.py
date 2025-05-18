@@ -320,9 +320,26 @@ def add_club_role(request, club_id):
                     club=club, 
                     student=student
                 )
-                membership.position = role_name if role_type == 'standard' else 'Member'
-                membership.custom_position = role_name if role_type == 'custom' else None
+                
+                # Fix for Vice President role - validate against POSITION_CHOICES first
+                if role_type == 'standard':
+                    # Check if role_name is a valid position choice
+                    valid_positions = [choice[0] for choice in ClubMembership.POSITION_CHOICES]
+                    if role_name in valid_positions:
+                        membership.position = role_name
+                    else:
+                        # If not a valid position, create it as a custom position
+                        membership.position = 'Member'
+                        membership.custom_position = role_name
+                else:
+                    membership.position = 'Member'
+                    membership.custom_position = role_name if role_type == 'custom' else None
+                
                 membership.save()
+                
+                # Double-check the saved state and log any issues
+                print(f"Saved membership: student={student.id}, position={membership.position}, custom={membership.custom_position}")
+                
             except Student.DoesNotExist:
                 return Response({"error": f"Student with ID {member_id} not found"}, status=404)
 
