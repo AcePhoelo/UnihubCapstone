@@ -2,7 +2,7 @@ import axios from 'axios';
 import { checkAndRefreshToken } from './tokenRefresh';
 
 const api = axios.create({
-  baseURL: 'http://54.169.81.75:8000'
+  baseURL: process.env.REACT_APP_API_URL || 'https://curtinunihubplus.com'
 });
 
 api.interceptors.request.use(

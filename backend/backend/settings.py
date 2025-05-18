@@ -24,10 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-nma=xi6x2p-crjg^ifqqkapyu1qjd0l=+wn)-rijk_o%$!k3w_"
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-nma=xi6x2p-crjg^ifqqkapyu1qjd0l=+wn)-rijk_o%$!k3w_")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+
 
 # Use the same host for the frontend for simplicity (we choose localhost here)
 CSRF_TRUSTED_ORIGINS = [
@@ -39,6 +40,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Frontend origin
     "http://s3-deployment-ec2.s3-website-ap-southeast-1.amazonaws.com",  # Frontend S3 bucket URL
     "http://curtinunihubplus.com",
+    "https://curtinunihubplus.com",
+    "https://www.curtinunihubplus.com",
+    'http://www.curtinunihubplus.com'
 ]
 
 ALLOWED_HOSTS = [
@@ -246,5 +250,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'Unihub.sg@gmail.com'  
-EMAIL_HOST_PASSWORD = 'vghe ypnq qpva tikn' 
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "vghe ypnq qpva tikn")
 DEFAULT_FROM_EMAIL = 'Unihub.sg@gmail.com'  
