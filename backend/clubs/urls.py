@@ -14,7 +14,8 @@ from .views import (
     add_club_role,
     delete_club_role,
     get_position_choices,
-    transfer_leadership
+    transfer_leadership,
+    update_club_role
 )
 
 urlpatterns = [
@@ -38,6 +39,7 @@ urlpatterns = [
     path('clubs/<int:club_id>/roles/add/', add_club_role, name='add_club_role'),
     path('clubs/<int:club_id>/roles/delete/', delete_club_role, name='delete_club_role_by_name'),
     path('clubs/<int:club_id>/roles/<int:role_id>/delete/', delete_club_role, name='delete_club_role'),
+    path('clubs/<int:club_id>/roles/<str:role_id>/update/', update_club_role, name='update_club_role'),
     path('clubs/<int:club_id>/roles/position_choices/', get_position_choices, name='get_position_choices'),  # GET position choices for a club
     path('clubs/<int:club_id>/transfer_leadership/', transfer_leadership, name='transfer_leadership'),  # POST transfer leadership to another member
 ]

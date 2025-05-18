@@ -253,6 +253,90 @@ def delete_club(request, club_id):
     except Club.DoesNotExist:
         return Response({"error": "Club not found"}, status=404)
     
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_club_role(request, club_id, role_id):
+    """Update an existing role in the club."""
+    try:
+        club = Club.objects.get(id=club_id)
+        updated_name = clean_input(request.data.get('name'))
+        role_type = clean_input(request.data.get('type', ''))
+        
+        if not updated_name:
+            return Response({"error": "Role name is required"}, status=400)
+        
+        # Determine if standard role by checking against POSITION_CHOICES
+        standard_positions = [choice[0] for choice in ClubMembership.POSITION_CHOICES]
+        is_standard_role = updated_name in standard_positions or role_type == 'standard'
+        
+        # Handle custom role (format: 'custom_123')
+        if str(role_id).startswith('custom_'):
+            membership_id = int(str(role_id).replace('custom_', ''))
+            try:
+                # Get the specific membership and its custom position
+                membership = ClubMembership.objects.get(id=membership_id, club=club)
+                old_custom_position = membership.custom_position
+                
+                # Update based on role type
+                if is_standard_role:
+                    membership.position = updated_name
+                    membership.custom_position = ''
+                else:
+                    membership.custom_position = updated_name
+                
+                membership.save()
+                
+                # Update any other members with the same custom role
+                if old_custom_position:
+                    ClubMembership.objects.filter(
+                        club=club, 
+                        custom_position=old_custom_position
+                    ).update(custom_position=updated_name)
+                    
+                return Response({
+                    "message": "Role updated successfully",
+                    "name": updated_name
+                }, status=200)
+                
+            except ClubMembership.DoesNotExist:
+                return Response({"error": "Custom role not found"}, status=404)
+        
+        # Handle standard role
+        else:
+            # For standard roles, the role_id is the role name itself
+            standard_role_name = role_id
+            
+            # President role cannot be renamed
+            if standard_role_name == 'President' and updated_name != 'President':
+                return Response({"error": "Cannot rename the President role"}, status=400)
+                
+            # Find all members with this standard role
+            memberships = ClubMembership.objects.filter(club=club, position=standard_role_name)
+            
+            if not memberships.exists():
+                return Response({"error": f"No members with role '{standard_role_name}'"}, status=404)
+            
+            # Update all matching members
+            for membership in memberships:
+                if is_standard_role:
+                    membership.position = updated_name
+                    membership.custom_position = ''
+                else:
+                    # Converting standard to custom
+                    membership.position = 'Member'
+                    membership.custom_position = updated_name
+                membership.save()
+            
+            return Response({
+                "message": "Role updated successfully",
+                "name": updated_name
+            }, status=200)
+            
+    except Club.DoesNotExist:
+        return Response({"error": "Club not found"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+    
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_club_roles(request, club_id):
@@ -320,26 +404,9 @@ def add_club_role(request, club_id):
                     club=club, 
                     student=student
                 )
-                
-                # Fix for Vice President role - validate against POSITION_CHOICES first
-                if role_type == 'standard':
-                    # Check if role_name is a valid position choice
-                    valid_positions = [choice[0] for choice in ClubMembership.POSITION_CHOICES]
-                    if role_name in valid_positions:
-                        membership.position = role_name
-                    else:
-                        # If not a valid position, create it as a custom position
-                        membership.position = 'Member'
-                        membership.custom_position = role_name
-                else:
-                    membership.position = 'Member'
-                    membership.custom_position = role_name if role_type == 'custom' else None
-                
+                membership.position = role_name if role_type == 'standard' else 'Member'
+                membership.custom_position = role_name if role_type == 'custom' else None
                 membership.save()
-                
-                # Double-check the saved state and log any issues
-                print(f"Saved membership: student={student.id}, position={membership.position}, custom={membership.custom_position}")
-                
             except Student.DoesNotExist:
                 return Response({"error": f"Student with ID {member_id} not found"}, status=404)
 

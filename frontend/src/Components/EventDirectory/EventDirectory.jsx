@@ -303,7 +303,7 @@ const EventDirectory = () => {
                             style={{
                                 cursor: 'pointer',
                                 // Apply the gradient directly as a background instead of using CSS variables
-                                background: pinnedEvents[featuredIndex].hoverBackground,
+                                background: '#FFFFFF',
                                 // You might also want a box-shadow using the hover color
                                 boxShadow: pinnedEvents[featuredIndex].hoverColor ? 
                                     `0 8px 16px rgba(${pinnedEvents[featuredIndex].dominant_color?.join(',')}, 0.3)` : 

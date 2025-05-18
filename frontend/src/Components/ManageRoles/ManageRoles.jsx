@@ -258,42 +258,51 @@ const ManageRoles = () => {
         }
     };
 
-    const handleUpdateRole = async (roleId, updatedRoleName) => {
-        if (!updatedRoleName) {
-            warning('Role name cannot be empty');
-            return;
+const handleUpdateRole = async (roleId, updatedRoleName) => {
+    if (!updatedRoleName) {
+        warning('Role name cannot be empty');
+        return;
+    }
+    
+    const headers = await getAuthHeaders();
+    if (!headers) return;
+    
+    // Check if the role is standard or custom
+    const isCustomRole = typeof roleId === 'string' && roleId.startsWith('custom_');
+    
+    // Check if the new name matches any standard position
+    const standardPositions = ['Member', 'Executive Committee', 'Head of Department', 
+                              'Treasurer', 'Secretary', 'Vice President', 'President'];
+    const isStandardRole = standardPositions.includes(updatedRoleName);
+    
+    try {
+        const response = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/roles/${roleId}/update/`, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify({
+                name: updatedRoleName,
+                type: isStandardRole ? 'standard' : 'custom'
+            }),
+        });
+    
+        if (!response.ok) {
+            throw new Error('Failed to update role');
         }
     
-        const headers = await getAuthHeaders();
-        if (!headers) return;
+        const data = await response.json();
     
-        try {
-            const response = await fetch(`http://54.169.81.75:8000/clubs/clubs/${club_id}/roles/${roleId}/update/`, {
-                method: 'PUT',
-                headers,
-                body: JSON.stringify({
-                    name: updatedRoleName,
-                }),
-            });
+        setExistingRoles((prevRoles) =>
+            prevRoles.map((role) =>
+                role.id === roleId ? { ...role, name: data.name } : role
+            )
+        );
     
-            if (!response.ok) {
-                throw new Error('Failed to update role');
-            }
-    
-            const data = await response.json();
-    
-            setExistingRoles((prevRoles) =>
-                prevRoles.map((role) =>
-                    role.id === roleId ? { ...role, name: data.name } : role
-                )
-            );
-    
-            setEditingIndex(null);
-        } catch (err) {
-            console.error('Error updating role:', err);
-            error2('Failed to update role. Please try again.');
-        }
-    };
+        setEditingIndex(null);
+    } catch (err) {
+        console.error('Error updating role:', err);
+        error2('Failed to update role. Please try again.');
+    }
+};
 
     const handleDeleteRole = async (index) => {
         const roleToDelete = existingRoles[index];
