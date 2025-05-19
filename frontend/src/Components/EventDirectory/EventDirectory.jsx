@@ -45,7 +45,7 @@ const EventDirectory = () => {
         
         setCurrentUserName(currentUserData.full_name || currentUserData.name || '');
         setCurrentUserProfilePic(profilePicUrl.startsWith('http') ? profilePicUrl : 
-                                profilePicUrl ? `https://54.169.81.75:8000${profilePicUrl}` : '');
+                                profilePicUrl ? `https://curtinunihubplus.com${profilePicUrl}` : '');
     }, []);
 
     // In the fetchEvents function, update to use backend colors directly
@@ -55,7 +55,7 @@ const EventDirectory = () => {
             const headers = { 'Content-Type': 'application/json' };
             if (!isGuest && token) headers.Authorization = `Bearer ${token}`;
 
-            const resp = await fetch('https://54.169.81.75:8000/api/event/add_event/', {
+            const resp = await fetch('https://curtinunihubplus.com/api/event/add_event/', {
                 headers,
             });
 
@@ -69,7 +69,7 @@ const EventDirectory = () => {
                 name: event.name,
                 description: event.description,
                 imageUrl: event.banner?.startsWith('http') ? event.banner : 
-                        event.banner ? `https://54.169.81.75:8000${event.banner}` : null,
+                        event.banner ? `https://curtinunihubplus.com${event.banner}` : null,
                 date: event.date,
                 time: event.time,
                 place: event.location,

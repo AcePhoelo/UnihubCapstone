@@ -22,7 +22,7 @@ const Sidebar = ({ isOpen, onClose, presidentEmail, currentClubName }) => {
 
       const token = localStorage.getItem('access_token');
 
-      fetch('https://54.169.81.75:8000/clubs/list', {
+      fetch('https://curtinunihubplus.com/clubs/list', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -63,7 +63,7 @@ const Sidebar = ({ isOpen, onClose, presidentEmail, currentClubName }) => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('https://54.169.81.75:8000/collaboration/send-email/', {
+      const response = await fetch('https://curtinunihubplus.com/collaboration/send-email/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

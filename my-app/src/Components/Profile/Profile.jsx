@@ -25,8 +25,8 @@ const Profile = () => {
             try {
                 const accessToken = localStorage.getItem('access_token');
                 const endpoint = student_id
-                    ? `https://54.169.81.75:8000/profile/students/${student_id}/` // Fetch profile by student_id
-                    : 'https://54.169.81.75:8000/profile/profile/'; // Fetch logged-in user's profile
+                    ? `https://curtinunihubplus.com/profile/students/${student_id}/` // Fetch profile by student_id
+                    : 'https://curtinunihubplus.com/profile/profile/'; // Fetch logged-in user's profile
 
                 const response = await fetch(endpoint, {
                     method: 'GET',

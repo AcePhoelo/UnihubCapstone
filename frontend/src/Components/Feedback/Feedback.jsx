@@ -40,7 +40,7 @@ const Feedback = () => {
         const fetchEvent = async () => {
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch(`https://54.169.81.75:8000/api/event/add_event/`, {
+                const response = await fetch(`https://curtinunihubplus.com/api/event/add_event/`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -182,7 +182,7 @@ const Feedback = () => {
 
         try {
             const token = localStorage.getItem('access_token');
-            const response = await fetch('https://54.169.81.75:8000/api/feedback/feedback/', {
+            const response = await fetch('https://curtinunihubplus.com/api/feedback/feedback/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -47,7 +47,7 @@ const EventDirectory = () => {
         const fetchEvents = async () => {
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch('https://54.169.81.75:8000/api/event/add_event/', {
+                const response = await fetch('https://curtinunihubplus.com/api/event/add_event/', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -96,7 +96,7 @@ const EventDirectory = () => {
     //     if (studentEmail) {
     //         const fetchStudentData = async () => {
     //             try {
-    //                 const response = await fetch(`https://54.169.81.75:8000/api/profile/?email=${studentEmail}`);
+    //                 const response = await fetch(`https://curtinunihubplus.com/api/profile/?email=${studentEmail}`);
     //                 if (!response.ok) {
     //                     throw new Error(`HTTP error! status: ${response.status}`);
     //                 }

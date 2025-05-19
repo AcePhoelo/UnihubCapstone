@@ -154,7 +154,7 @@ const Club = () => {
                 headers.Authorization = `Bearer ${token}`;
             }
 
-            const response = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/`, {
+            const response = await fetch(`https://curtinunihubplus.com/clubs/clubs/${club_id}/`, {
                 method: 'GET',
                 headers,
             });
@@ -207,7 +207,7 @@ const Club = () => {
             if (!isGuest && token) headers.Authorization = `Bearer ${token}`;
 
             const resp = await fetch(
-                `https://54.169.81.75:8000/api/event/club_events/?club_id=${club_id}`,
+                `https://curtinunihubplus.com/api/event/club_events/?club_id=${club_id}`,
                 { headers }
             );
 
@@ -235,7 +235,7 @@ const fetchClubMembers = async () => {
         // Add debugging to see what's happening
         console.log("Fetching members for club:", club_id);
         
-        const mResp = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/members/`, { headers });
+        const mResp = await fetch(`https://curtinunihubplus.com/clubs/clubs/${club_id}/members/`, { headers });
         
         if (mResp.ok) {
             const md = await mResp.json();
@@ -320,7 +320,7 @@ const fetchClubMembers = async () => {
         
         setStudentName(currentUserData.full_name || currentUserData.name || '');
         setProfilePicture(profilePicUrl.startsWith('http') ? profilePicUrl : 
-                          profilePicUrl ? `https://54.169.81.75:8000${profilePicUrl}` : '');
+                          profilePicUrl ? `https://curtinunihubplus.com${profilePicUrl}` : '');
     }, [club_id]);
 
     useEffect(() => {
@@ -343,7 +343,7 @@ const fetchClubMembers = async () => {
         }
         
         const token = localStorage.getItem('access_token');
-        await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/members/add/`, {
+        await fetch(`https://curtinunihubplus.com/clubs/clubs/${club_id}/members/add/`, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -360,7 +360,7 @@ const fetchClubMembers = async () => {
             try {
                 // Get fresh member data with original structure - don't transform it!
                 const token = localStorage.getItem('access_token');
-                const response = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/members/`, {
+                const response = await fetch(`https://curtinunihubplus.com/clubs/clubs/${club_id}/members/`, {
                     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
                 });
     
@@ -396,7 +396,7 @@ const fetchClubMembers = async () => {
         } else {
             // Normal leave process for non-presidents
             const token = localStorage.getItem('access_token');
-            await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/members/${JSON.parse(localStorage.getItem('profile')).studentid}/remove/`, {
+            await fetch(`https://curtinunihubplus.com/clubs/clubs/${club_id}/members/${JSON.parse(localStorage.getItem('profile')).studentid}/remove/`, {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -424,7 +424,7 @@ const fetchClubMembers = async () => {
                 throw new Error("Could not determine new president ID");
             }
             
-            const response = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/transfer_leadership/`, {
+            const response = await fetch(`https://curtinunihubplus.com/clubs/clubs/${club_id}/transfer_leadership/`, {
                 method: 'POST',
                 headers: { 
                     Authorization: `Bearer ${token}`,
@@ -498,7 +498,7 @@ const fetchClubMembers = async () => {
     const updateClubDescription = async () => {
         try {
             const token = localStorage.getItem('access_token');
-            const resp = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/update/`, {
+            const resp = await fetch(`https://curtinunihubplus.com/clubs/clubs/${club_id}/update/`, {
                 method: 'PUT',
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ description: descriptionText })
@@ -535,7 +535,7 @@ const fetchClubMembers = async () => {
         if (newBanner) form.append('banner', newBanner);
         
         try {
-            const resp = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/update/`, {
+            const resp = await fetch(`https://curtinunihubplus.com/clubs/clubs/${club_id}/update/`, {
                 method: 'PUT',
                 headers: { Authorization: `Bearer ${token}` },
                 body: form
@@ -595,7 +595,7 @@ const fetchClubMembers = async () => {
         if (!confirmed) return;
         
         const token = localStorage.getItem('access_token');
-        const resp = await fetch(`https://54.169.81.75:8000/clubs/clubs/${club_id}/delete/`, {
+        const resp = await fetch(`https://curtinunihubplus.com/clubs/clubs/${club_id}/delete/`, {
             method: 'DELETE',
             headers: { Authorization: `Bearer ${token}` }
         });

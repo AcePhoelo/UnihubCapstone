@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
       const refreshToken = localStorage.getItem('refresh_token');
       if (!refreshToken) return false;
 
-      const response = await fetch('https://54.169.81.75:8000/api/token/refresh/', {
+      const response = await fetch('https://curtinunihubplus.com/api/token/refresh/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Get profile data
-      const profileResponse = await fetch('https://54.169.81.75:8000/profile/profile/', {
+      const profileResponse = await fetch('https://curtinunihubplus.com/profile/profile/', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
       // Clear previous user data
       localStorage.clear();
       
-      const response = await fetch('https://54.169.81.75:8000/api/token/', {
+      const response = await fetch('https://curtinunihubplus.com/api/token/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

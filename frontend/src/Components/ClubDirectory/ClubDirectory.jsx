@@ -61,7 +61,7 @@ const ClubDirectory = () => {
         setCurrentUserName(currentUserData.full_name || currentUserData.name || '');
         setCurrentUserProfilePic(
             profilePicUrl.startsWith('http') ? profilePicUrl :
-            profilePicUrl ? `https://54.169.81.75:8000${profilePicUrl}` : ''
+            profilePicUrl ? `https://curtinunihubplus.com${profilePicUrl}` : ''
         );
 
         const fetchClubs = async () => {
@@ -75,7 +75,7 @@ const ClubDirectory = () => {
             }
 
             try {
-                const res = await fetch('https://54.169.81.75:8000/clubs/clubs/', { headers });
+                const res = await fetch('https://curtinunihubplus.com/clubs/clubs/', { headers });
 
                 if (res.status === 401 && !isGuest) {
                     throw new Error('Unauthorized');
@@ -103,7 +103,7 @@ const ClubDirectory = () => {
                                 // Make sure banner URLs are handled correctly
                                 banner: club.banner?.startsWith('http') 
                                     ? club.banner 
-                                    : `https://54.169.81.75:8000${club.banner}`
+                                    : `https://curtinunihubplus.com${club.banner}`
                             };
                         } else {
                             // Fallback if no color data
@@ -115,7 +115,7 @@ const ClubDirectory = () => {
                                 // Make sure banner URLs are handled correctly
                                 banner: club.banner?.startsWith('http') 
                                     ? club.banner 
-                                    : `https://54.169.81.75:8000${club.banner}`
+                                    : `https://curtinunihubplus.com${club.banner}`
                             };
                         }
                     } catch (error) {
@@ -128,7 +128,7 @@ const ClubDirectory = () => {
                             // Make sure banner URLs are handled correctly
                             banner: club.banner?.startsWith('http') 
                                 ? club.banner 
-                                : `https://54.169.81.75:8000${club.banner}`
+                                : `https://curtinunihubplus.com${club.banner}`
                         };
                     }
                 });

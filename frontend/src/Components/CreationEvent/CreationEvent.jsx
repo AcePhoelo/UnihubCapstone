@@ -26,7 +26,7 @@ const CreationEvent = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
-        fetch('https://54.169.81.75:8000/clubs/list', {
+        fetch('https://curtinunihubplus.com/clubs/list', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -99,7 +99,7 @@ const CreationEvent = () => {
         formData.append('club', clubName);
 
         try {
-            const response = await fetch('https://54.169.81.75:8000/api/event/add_event/create/', {
+            const response = await fetch('https://curtinunihubplus.com/api/event/add_event/create/', {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`,

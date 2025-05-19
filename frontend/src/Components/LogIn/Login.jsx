@@ -38,7 +38,7 @@ const Login = () => {
     
         setIsLoading(true);
         try {
-            const response = await fetch('https://54.169.81.75:8000/api/token/', {
+            const response = await fetch('https://curtinunihubplus.com/api/token/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const Login = () => {
         
                 // Fetch profile (existing code)
                 const accessToken = localStorage.getItem('access_token');
-                const profileResponse = await fetch('https://54.169.81.75:8000/profile/profile/', {
+                const profileResponse = await fetch('https://curtinunihubplus.com/profile/profile/', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
