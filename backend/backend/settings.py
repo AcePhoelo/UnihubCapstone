@@ -37,7 +37,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://curtinunihubplus.com",  # Add HTTPS version
     "https://www.curtinunihubplus.com",  # Add HTTPS version
     "http://curtinunihubplus.com",
-    "http://www.curtinunihubplus.com"
+    "http://www.curtinunihubplus.com",
+    "https://https://d1gr4vprzm0ow3.cloudfront.net"
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -46,7 +47,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://curtinunihubplus.com",
     "https://curtinunihubplus.com",
     "https://www.curtinunihubplus.com",
-    'http://www.curtinunihubplus.com'
+    'http://www.curtinunihubplus.com',
+    'https://d1gr4vprzm0ow3.cloudfront.net',  # CloudFront URL
 ]
 
 ALLOWED_HOSTS = [
@@ -54,6 +56,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",  # Backend (change to 54.169.81.75:8000)
     "54.169.81.75",
     "curtinunihubplus.com",
+    "d1gr4vprzm0ow3.cloudfront.net",  # CloudFront URL
     "www.curtinunihubplus.com",
 ]
 
