@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { NotificationProvider } from './Components/Notification/Context';
 // Component Imports
@@ -19,6 +19,19 @@ import ManageRoles from './Components/ManageRoles/ManageRoles';
 import RegisterEvent from './Components/RegisterEvent/RegisterEvent';
 import ErrorPage from './Components/Error/ErrorPage';
 
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem('access_token');
+  const isGuest = localStorage.getItem('isGuest') === 'true';
+  const location = useLocation();
+
+  if (!token && !isGuest) {
+    // Redirect to login but save the attempted path for redirect after login
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+
+  return children;
+};
+
 function App() {
     return (
         <Router>
@@ -31,32 +44,32 @@ function App() {
                 <Route path="/login" element={<Login />} />
 
                 {/* Directories */}
-                <Route path="/club-directory" element={<ClubDirectory />} />
-                <Route path="/event-directory" element={<EventDirectory />} />
+                <Route path="/club-directory" element={<ProtectedRoute><ClubDirectory /></ProtectedRoute>} />
+                <Route path="/event-directory" element={<ProtectedRoute><EventDirectory /></ProtectedRoute>} />
 
                 {/* User Activity */}
-                <Route path="/my-activity" element={<MyActivity />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/profile/:student_id" element={<Profile />} /> {/* Dynamic profile route */}
-                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/my-activity" element={<ProtectedRoute><MyActivity /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/profile/:student_id" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> {/* Dynamic profile route */}
+                <Route path="/calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
 
                 {/* Creation Pages */}
-                <Route path="/creation-club" element={<CreationClub />} />
-                <Route path="/creation-event" element={<CreationEvent />} />
+                <Route path="/creation-club" element={<ProtectedRoute><CreationClub /></ProtectedRoute>} />
+                <Route path="/creation-event" element={<ProtectedRoute><CreationEvent /></ProtectedRoute>} />
 
                 {/* Feedback */}
-                <Route path="/feedback/:eventName" element={<Feedback />} />
-                <Route path="/feedback-review/:eventName" element={<FeedbackReview />} />
+                <Route path="/feedback/:eventName" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
+                <Route path="/feedback-review/:eventName" element={<ProtectedRoute><FeedbackReview /></ProtectedRoute>} />
 
                 {/* Club and Event Pages */}
-                <Route path="/club/:club_id" element={<Club />} />
-                <Route path="/event/:eventName" element={<Event />} />
+                <Route path="/club/:club_id" element={<ProtectedRoute><Club /></ProtectedRoute>} />
+                <Route path="/event/:eventName" element={<ProtectedRoute><Event /></ProtectedRoute>} />
 
                 {/* Role Management */}
-                <Route path="/manage-roles/:club_id" element={<ManageRoles />} />
+                <Route path="/manage-roles/:club_id" element={<ProtectedRoute><ManageRoles /></ProtectedRoute>} />
 
                 {/* Event Registration */}
-                <Route path="/register-event/:eventName" element={<RegisterEvent />} />
+                <Route path="/register-event/:eventName" element={<ProtectedRoute><RegisterEvent /></ProtectedRoute>} />
 
                 {/* Fallback Route */}
                 <Route path="*" element={<ErrorPage />} />
