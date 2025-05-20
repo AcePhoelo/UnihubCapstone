@@ -38,7 +38,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.curtinunihubplus.com",  # Add HTTPS version
     "http://curtinunihubplus.com",
     "http://www.curtinunihubplus.com",
-    "https://https://d1gr4vprzm0ow3.cloudfront.net"
+    "https://d1gr4vprzm0ow3.cloudfront.net"
 ]
 
 CORS_ALLOWED_ORIGINS = [
