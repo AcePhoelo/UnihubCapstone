@@ -32,13 +32,16 @@ DEBUG = True
 # Use the same host for the frontend for simplicity (we choose localhost here)
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-    "http://s3-deployment-ec2.s3-website-ap-southeast-1.amazonaws.com",  # Frontend S3 bucket URL
+    "http://s3-deployment-ec2.s3-website-ap-southeast-1.amazonaws.com",
+    "http://curtinunihubplus.com",
+    "http://www.curtinunihubplus.com"
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Frontend origin
-    "http://s3-deployment-ec2.s3-website-ap-southeast-1.amazonaws.com",  # Frontend S3 bucket URL
+    "http://localhost:3000",
+    "http://s3-deployment-ec2.s3-website-ap-southeast-1.amazonaws.com",
     "http://curtinunihubplus.com",
+    "http://www.curtinunihubplus.com"
 ]
 
 ALLOWED_HOSTS = [
@@ -215,6 +218,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = "Lax"
+
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+    'x-csrftoken',
+    # Any other headers you're using
+]
 
 LOGGING = {
     'version': 1,
