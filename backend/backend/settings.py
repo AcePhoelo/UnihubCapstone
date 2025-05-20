@@ -249,12 +249,22 @@ CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+SESSION_COOKIE_DOMAIN = 'curtinunihubplus.com'
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),  # Longer access token
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # 7-day refresh token
-    'ROTATE_REFRESH_TOKENS': True,                # Get new refresh token when refreshing
-    'BLACKLIST_AFTER_ROTATION': True,             # Blacklist old refresh tokens
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    
+    # Add these cookie settings
+    'AUTH_COOKIE': 'access_token',
+    'AUTH_COOKIE_SECURE': True,
+    'AUTH_COOKIE_HTTP_ONLY': True,
+    'AUTH_COOKIE_SAMESITE': 'None',  # Allows cross-site cookie use
+    'AUTH_COOKIE_PATH': '/',
+    'AUTH_COOKIE_DOMAIN': '.curtinunihubplus.com',  # Note the dot prefix
 }
 
 # USE THIS AFTER TESTING
